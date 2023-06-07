@@ -17,6 +17,13 @@ class Imgs{
   static final String ic_share =getPath('ic_share');
   static final String ic_add_book =getPath('ic_add_book');
   static final String ic_earphone =getPath('ic_earphone');
+  static final String ic_sc =getPath('ic_sc');
+  static final String ic_text_copy =getPath('ic_text_copy');
+  static final String ic_text_idea =getPath('ic_text_idea');
+  static final String ic_text_line =getPath('ic_text_line');
+  static final String ic_gesture =getPath('ic_gesture');
+  static final String ic_next =getPath('ic_next');
+  static final String ic_pre =getPath('ic_pre');
 
 
 

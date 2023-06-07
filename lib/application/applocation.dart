@@ -1,4 +1,5 @@
 
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -19,10 +20,14 @@ class _ApplicationState extends State<Application> {
       title: '华夏国学',
       getPages: AppRouters.routers,
       initialRoute: Routers.Initial,
+      builder: BotToastInit(),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
+      ],
+      navigatorObservers: [
+        BotToastNavigatorObserver()
       ],
       supportedLocales: const [
          Locale('en'),

@@ -11,7 +11,6 @@ class BookStoreLogic extends GetxController {
   final List<Book> books =[
     Book(title: '论语'),
     Book(title: '论语1'),
-
     Book(title: '论语2'),
     Book(title: '论语3'),
     Book(title: '论语4'),
