@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:huaxia/apps/me/me/view.dart';
 import 'package:huaxia/config/config.dart';
 
 import '../book_store/view.dart';
@@ -15,7 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final logic = Get.find<HomeLogic>();
-  final PageController _controller = PageController();
+
 
   @override
   void initState() {
@@ -28,18 +29,17 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
-        controller: _controller,
+        controller: logic.pageController,
         children: [
           Container(color: Colors.teal,),
           BookStorePage(),
-          Container(color: Colors.yellow,),
+          MePage(),
         ],
       ),
       bottomNavigationBar: Obx(() {
         return BottomNavigationBar(
           onTap: (i) {
-            logic.selectIndex.value = i;
-            _controller.jumpToPage(i);
+            logic.jump(i);
           },
           currentIndex: logic.selectIndex.value,
           items: [

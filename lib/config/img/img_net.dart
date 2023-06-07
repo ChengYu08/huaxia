@@ -7,6 +7,7 @@ class ImgNet{
     double? width,
     double? height,
     BoxFit? fit,
+    BoxShape? boxShape
   }){
    return ExtendedImage.network(
       url,
@@ -14,12 +15,11 @@ class ImgNet{
       height: height,
       fit: fit,
       cache: true,
+      shape: boxShape,
       loadStateChanged: (ExtendedImageState state) {
         switch (state.extendedImageLoadState) {
           case LoadState.loading:
             return CircularProgressIndicator();
-
-
 
           case LoadState.completed:
             return state.completedWidget;

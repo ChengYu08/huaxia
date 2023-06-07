@@ -25,6 +25,22 @@ class Imgs{
   static final String ic_next =getPath('ic_next');
   static final String ic_pre =getPath('ic_pre');
 
+  static final String ic_join =getPath('ic_join');
+  static final String ic_me_bg =getPath('ic_me_bg');
+  static final String ic_me_book =getPath('ic_me_book');
+  static final String ic_me_browse =getPath('ic_me_browse');
+  static final String ic_me_feedback =getPath('ic_me_feedback');
+  static final String ic_me_group =getPath('ic_me_group');
+  static final String ic_me_notes =getPath('ic_me_notes');
+  static final String ic_me_sentence =getPath('ic_me_sentence');
+  static final String ic_me_vip_bg =getPath('ic_me_vip_bg');
+  static final String ic_vip =getPath('ic_vip');
+  static final String ic_widget =getPath('ic_widget');
+  static final String ic_wach =getPath('ic_wach');
+  static final String ic_like =getPath('ic_like');
+  static final String ic_like_no =getPath('ic_like_no');
+
+
 
 
 

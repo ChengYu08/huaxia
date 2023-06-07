@@ -33,9 +33,10 @@ class AppTheme {
         unselectedLabelColor: const Color(0xff585F69),
       ),
       appBarTheme: const AppBarTheme(
+          backgroundColor:  Color(0xffF4F5F7),
+          centerTitle: true,
           titleTextStyle: TextStyle(
         color: Color(0xff202329),
-        backgroundColor:  Color(0xffF4F5F7),
         fontSize: 18,
       )),
 
@@ -55,7 +56,7 @@ class AppTheme {
       ),
       textTheme: const TextTheme(
           displaySmall: TextStyle(color: Colors.black, fontSize: 20),
-          titleLarge: TextStyle(color: Color(0xff202329), fontSize: 24),
+          titleLarge: TextStyle(color: Color(0xff202329), fontSize: 24,fontWeight: FontWeight.bold),
           titleMedium: TextStyle(color: Color(0xff585F69), fontSize: 18),
           titleSmall: TextStyle(color: Color(0xff585F69), fontSize: 16),
           bodyLarge: TextStyle(color: Color(0xff202329), fontSize: 18),

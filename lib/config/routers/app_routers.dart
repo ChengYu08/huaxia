@@ -5,6 +5,10 @@ import 'package:huaxia/apps/book_store/book_details/book_reader/binding.dart';
 import 'package:huaxia/apps/book_store/book_details/book_reader/view.dart';
 import 'package:huaxia/apps/book_store/book_search/view.dart';
 import 'package:huaxia/apps/home/view.dart';
+import 'package:huaxia/apps/me/me/binding.dart';
+import 'package:huaxia/apps/me/me/sentence/binding.dart';
+import 'package:huaxia/apps/me/me/sentence/view.dart';
+import 'package:huaxia/apps/me/me/view.dart';
 import 'package:huaxia/apps/screen/binding.dart';
 import 'package:huaxia/apps/screen/view.dart';
 
@@ -23,6 +27,9 @@ class Routers{
   static const bookSearchPage = '/BookSearchPage';
   static const bookDetailsPage = '/BookDetailsPage';
   static const bookReaderPage = '/BookReaderPage';
+
+  static const me = '/MePage';
+  static const sentencePage = '/MePage/SentencePage';
 }
 class AppRouters{
   static final routers = [
@@ -36,7 +43,8 @@ class AppRouters{
         page: () =>HomePage(),
         bindings: [
           HomeBinding(),
-          BookStoreBinding()
+          BookStoreBinding(),
+          MeBinding()
         ],
        ),
     GetPage(
@@ -51,5 +59,13 @@ class AppRouters{
         name: Routers.bookReaderPage,
         page: ()=>BookReaderPage(),
         binding: BookReaderBinding()),
+    GetPage(
+        name: Routers.me,
+        page: ()=>MePage(),
+        binding: MeBinding()),
+    GetPage(
+        name: Routers.sentencePage,
+        page: ()=>SentencePage(),
+        binding: SentenceBinding()),
   ];
 }
