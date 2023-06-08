@@ -9,10 +9,10 @@ import 'package:huaxia/apps/home_sentence/binding.dart';
 import 'package:huaxia/apps/home_sentence/des_sentence/binding.dart';
 import 'package:huaxia/apps/home_sentence/des_sentence/view.dart';
 import 'package:huaxia/apps/home_sentence/view.dart';
-// import 'package:huaxia/apps/me/me/binding.dart';
-// import 'package:huaxia/apps/me/me/sentence/binding.dart';
-// import 'package:huaxia/apps/me/me/sentence/view.dart';
-// import 'package:huaxia/apps/me/me/view.dart';
+import 'package:huaxia/apps/me/me/binding.dart';
+import 'package:huaxia/apps/me/me/sentence/binding.dart';
+import 'package:huaxia/apps/me/me/sentence/view.dart';
+import 'package:huaxia/apps/me/me/view.dart';
 import 'package:huaxia/apps/screen/binding.dart';
 import 'package:huaxia/apps/screen/view.dart';
 
@@ -55,7 +55,7 @@ class AppRouters{
           HomeBinding(),
           BookStoreBinding(),
           HomeSentenceBinding(),
-          // MeBinding()
+          MeBinding()
         ],
        ),
 
@@ -84,13 +84,13 @@ class AppRouters{
         name: Routers.bookReaderPage,
         page: ()=>BookReaderPage(),
         binding: BookReaderBinding()),
-    // GetPage(
-    //     name: Routers.me,
-    //     page: ()=>MePage(),
-    //     binding: MeBinding()),
-    // GetPage(
-    //     name: Routers.sentencePage,
-    //     page: ()=>SentencePage(),
-    //     binding: SentenceBinding()),
+    GetPage(
+        name: Routers.me,
+        page: ()=>MePage(),
+        binding: MeBinding()),
+    GetPage(
+        name: Routers.sentencePage,
+        page: ()=>SentencePage(),
+        binding: SentenceBinding()),
   ];
 }
