@@ -58,14 +58,13 @@ class HomeSentencePage extends StatelessWidget {
             child: SizedBox(
               width: double.infinity,
               child: CardSwiper(
+                controller: logic.cardSwiperController,
                 cardsCount: 10,
                 padding: const EdgeInsets.only(
                     top: 50, bottom: 0, left: 16, right: 16),
                 numberOfCardsDisplayed: 3,
                 scale: .9,
-
-                allowedSwipeDirection:
-                    AllowedSwipeDirection.symmetric(horizontal: true),
+                allowedSwipeDirection: AllowedSwipeDirection.symmetric(horizontal: true),
                 backCardOffset: const Offset(0, -50),
                 onLike: (like) {
                   logic.like.value = like;
@@ -265,7 +264,9 @@ class HomeSentencePage extends StatelessWidget {
                 width: 40,
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  logic.cardSwiperController.swipeRight();
+                },
                 child: CircleAvatar(
                   maxRadius: 36,
                   backgroundColor: Colors.white,
