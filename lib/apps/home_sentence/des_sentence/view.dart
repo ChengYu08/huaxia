@@ -127,7 +127,7 @@ class DesSentencePage extends StatelessWidget {
                     children: [
                       Text(
                         '《周易》-象传',
-                        style: Get.textTheme.bodyMedium!,
+                        style: Get.textTheme.bodyMedium!.copyWith(fontFamily: 'MaShanZheng'),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 12),
@@ -141,7 +141,7 @@ class DesSentencePage extends StatelessWidget {
                         padding: const EdgeInsets.only(left: 10, right: 10),
                         child: Text(
                           '天行健，君子以自强不息。地势坤，君子以厚德载物。',
-                          style: Get.textTheme.displaySmall,
+                          style: Get.textTheme.displaySmall!.copyWith(fontFamily: 'ZhiMangXing'),
                         ),
                       ),
                       Row(
@@ -216,7 +216,7 @@ class DesSentencePage extends StatelessWidget {
                       ),
                       Text(
                         '天的运动刚强劲健，相应于此，君子处事，应像天一样，自我力求进步，刚毅坚卓，发奋图强，永不停息；大地的气势厚实和顺，君子应增厚美德，容载万物。',
-                        style: Get.textTheme.bodySmall,
+                        style: Get.textTheme.bodySmall!.copyWith(fontFamily: 'ZCOOLXiaoWei'),
                       ),
                       const SizedBox(
                         height: 50,

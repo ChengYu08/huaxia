@@ -40,6 +40,7 @@ dependencies:
   dotted_line: ^3.1.0
   card_swiper: ^2.0.4
   extended_image: ^8.0.2
+
   status_bar_control: ^3.2.1
   bot_toast: ^4.0.4
 dev_dependencies:
@@ -65,3 +66,14 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+  fonts:
+    - family: ZCOOLXiaoWei
+      fonts:
+        - asset: assets/fonts/ZCOOLXiaoWei-Regular.ttf
+    - family: MaShanZheng
+      fonts:
+        - asset: assets/fonts/MaShanZheng-Regular.ttf
+    - family: ZhiMangXing
+      fonts:
+        - asset: assets/fonts/ZhiMangXing-Regular.ttf
+

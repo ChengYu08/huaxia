@@ -129,7 +129,7 @@ class HomeSentencePage extends StatelessWidget {
                               Text(
                                 '《周易》-象传',
                                 style: Get.textTheme.bodyMedium!
-                                    .copyWith(fontWeight: FontWeight.bold),
+                                    .copyWith(fontWeight: FontWeight.bold,fontFamily: 'MaShanZheng'),
                               ),
                               IconButton(
                                   onPressed: () {},
@@ -141,7 +141,7 @@ class HomeSentencePage extends StatelessWidget {
                             ],
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 20, top: 32),
+                            padding: const EdgeInsets.only(left: 20, ),
                             child: Image.asset(
                               Imgs.ic_quotes,
                               width: 32,
@@ -152,12 +152,15 @@ class HomeSentencePage extends StatelessWidget {
                             padding: const EdgeInsets.only(left: 30, right: 30),
                             child: Text(
                               '天行健，君子以自强不息。地势坤，君子以厚德载物。',
-                              style: Get.textTheme.displaySmall,
+                              style: Get.textTheme.displaySmall!.copyWith(fontFamily: 'ZhiMangXing'),
                             ),
+                          ),
+                          const Spacer(
+                            flex: 1,
                           ),
                           const Padding(
                             padding: EdgeInsets.only(
-                                left: 16, right: 16, top: 40, bottom: 21),
+                                left: 16, right: 16,),
                             child: DottedLine(
                               direction: Axis.horizontal,
                               lineLength: double.infinity,
@@ -166,8 +169,11 @@ class HomeSentencePage extends StatelessWidget {
                               dashColor: Color(0xffE1E2E8),
                             ),
                           ),
+                          const Spacer(
+                            flex: 1,
+                          ),
                           Padding(
-                            padding: const EdgeInsets.all(23.0),
+                            padding: const EdgeInsets.only(left: 23,right: 23),
                             child: Text(
                               '【译文】',
                               style: Get.textTheme.bodySmall!
@@ -175,12 +181,15 @@ class HomeSentencePage extends StatelessWidget {
                             ),
                           ),
                           Expanded(
+                            flex: 10,
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 30),
-                              child: Text(
-                                '天的运动刚强劲健，相应于此，君子处事，应像天一样，自我力求进步，刚毅坚卓，发奋图强，永不停息；大地的气势厚实和顺，君子应增厚美德，容载万物。',
-                                style: Get.textTheme.bodySmall,
+                              child: SingleChildScrollView(
+                                child: Text(
+                                  '天的运动刚强劲健，相应于此，君子处事，动刚强劲健，相应于此，君子处事动刚强劲健，相应于此，君子处事动刚强劲健，相应于此，君子处事动刚强劲健，相应于此，君子处事应像天一样，自我力求进步，刚毅坚卓，发奋图强，永不停息；大地的气势厚实和顺，君子应增厚美德，容载万物。',
+                                  style: Get.textTheme.bodySmall!.copyWith(fontFamily: 'ZCOOLXiaoWei'),
+                                ),
                               ),
                             ),
                           ),
