@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:huaxia/widgets/tabbar_gradient_indicator.dart';
 
 class AppTheme {
-  static Color get mainColor => const Color(0xff216ED8);
+  static Color get mainColor => const Color(0xff00BEBD );
 
   static ThemeData get theme {
     final inputBorder = OutlineInputBorder(
@@ -54,20 +54,25 @@ class AppTheme {
           foregroundColor: MaterialStatePropertyAll(Colors.white)
         )
       ),
+
       textTheme: const TextTheme(
           displaySmall: TextStyle(color: Colors.black, fontSize: 20),
+
           titleLarge: TextStyle(color: Color(0xff202329), fontSize: 24,fontWeight: FontWeight.bold),
           titleMedium: TextStyle(color: Color(0xff585F69), fontSize: 18),
           titleSmall: TextStyle(color: Color(0xff585F69), fontSize: 16),
           bodyLarge: TextStyle(color: Color(0xff202329), fontSize: 18),
           bodyMedium: TextStyle(color: Color(0xff202329), fontSize: 16),
          bodySmall: TextStyle(color: Color(0xff202329), fontSize: 14),
-          labelLarge: TextStyle(color: Color(0xff83888F),fontSize: 12)),
+          labelLarge: TextStyle(color: Color(0xff83888F),fontSize: 12),
+          labelMedium: TextStyle(color: Color(0xff585F69),fontSize: 11),
+      ),
       dividerColor: const Color(0xffC2C6CE),
       dividerTheme: const DividerThemeData(
         color: Color(0xffC2C6CE),
       ),
       inputDecorationTheme: InputDecorationTheme(
+        hintStyle: TextStyle(color: Color(0xff83888F),fontSize: 14)
         // fillColor: Colors.white,
         // border: inputBorder,
         // errorBorder: inputBorder,

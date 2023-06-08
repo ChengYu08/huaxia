@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:huaxia/apps/me/me/view.dart';
+import 'package:huaxia/apps/home_sentence/view.dart';
+
+// import 'package:huaxia/apps/me/me/view.dart';
 import 'package:huaxia/config/config.dart';
 
 import '../book_store/view.dart';
@@ -31,9 +33,10 @@ class _HomePageState extends State<HomePage> {
         physics: const NeverScrollableScrollPhysics(),
         controller: logic.pageController,
         children: [
-          Container(color: Colors.teal,),
+          HomeSentencePage(),
           BookStorePage(),
-          MePage(),
+          Container()
+          // MePage(),
         ],
       ),
       bottomNavigationBar: Obx(() {

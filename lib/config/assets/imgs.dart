@@ -42,6 +42,18 @@ class Imgs{
 
 
 
+  static final String ic_push =getPath('ic_push');
+  static final String ic_quotes =getPath('ic_quotes');
+  static final String ic_review =getPath('ic_review');
+  static final String ic_ting =getPath('ic_ting');
+  static final String ic_like_text =getPath('ic_like_text');
+  static final String ic_like_no_text =getPath('ic_like_no_text');
+
+  static final String ic_edit =getPath('ic_edit');
+
+
+
+
 
 
 
