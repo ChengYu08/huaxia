@@ -9,7 +9,7 @@ class CustomSelectableTextItem {
 
   /// The callback that is called when the item is tapped or otherwise activated.
   /// If this is set to null, the button will be disabled.
-  final Function(String)? onPressed;
+  final Function(String text,TextSelection textSelection)? onPressed;
 
   /// Control type to manipulate the selection of text
   final SelectionControlType controlType;
@@ -43,7 +43,7 @@ class CustomSelectableTextItem {
   ///
   CustomSelectableTextItem({
     String? label,
-    Function(String)? onPressed,
+    Function(String text,TextSelection textSelection)? onPressed,
     required SelectionControlType controlType,
   }) : this._(label: label, onPressed: onPressed, controlType: controlType);
 
@@ -51,7 +51,7 @@ class CustomSelectableTextItem {
   ///
   /// Typically the icon is an [Icon] or an [ImageIcon] widget
   CustomSelectableTextItem.icon(
-      {Function(String)? onPressed,
+      {Function(String text,TextSelection textSelection)? onPressed,
       required Widget icon,
       SelectionControlType controlType = SelectionControlType.other})
       : this._(controlType: controlType, onPressed: onPressed, icon: icon);

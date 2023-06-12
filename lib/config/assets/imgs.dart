@@ -48,8 +48,10 @@ class Imgs{
   static final String ic_ting =getPath('ic_ting');
   static final String ic_like_text =getPath('ic_like_text');
   static final String ic_like_no_text =getPath('ic_like_no_text');
-
   static final String ic_edit =getPath('ic_edit');
+  static final String ic_menu =getPath('ic_menu');
+  static final String ic_ta =getPath('ic_ta');
+  static final String ic_brightness =getPath('ic_brightness');
 
 
 

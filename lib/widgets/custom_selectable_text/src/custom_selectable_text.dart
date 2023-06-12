@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../custom_selectable_text.dart';
+import 'MySelectableText.dart';
 import 'custom_text_selection_controls.dart';
 
 /// Creates a selectable text.
@@ -10,7 +11,7 @@ import 'custom_text_selection_controls.dart';
 /// The [showCursor], [autofocus], [dragStartBehavior], [selectionHeightStyle],
 /// [selectionWidthStyle] and [data] parameters must not be null. If specified,
 /// the [maxLines] argument must be greater than zero.
-class CustomSelectableText extends SelectableText {
+class CustomSelectableText extends MySelectableText {
   CustomSelectableText(
     super.data, {
     Key? key,
@@ -27,6 +28,7 @@ class CustomSelectableText extends SelectableText {
     super.cursorRadius,
     super.cursorColor,
     super.scrollPhysics,
+    super.onSingleTapUp,
     super.semanticsLabel,
     super.textHeightBehavior,
     super.textWidthBasis,
@@ -67,6 +69,7 @@ class CustomSelectableText extends SelectableText {
     super.onSelectionChanged,
     super.showCursor,
     super.selectionWidthStyle,
+    super.onSingleTapUp,
     super.selectionHeightStyle,
     super.enableInteractiveSelection,
     super.cursorWidth,

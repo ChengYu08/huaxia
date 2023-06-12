@@ -13,23 +13,7 @@ import 'logic.dart';
 class HomeSentencePage extends StatelessWidget {
   final logic = Get.find<HomeSentenceLogic>();
 
-  List<Container> cards = [
-    Container(
-      alignment: Alignment.center,
-      child: const Text('1'),
-      color: Colors.blue,
-    ),
-    Container(
-      alignment: Alignment.center,
-      child: const Text('2'),
-      color: Colors.red,
-    ),
-    Container(
-      alignment: Alignment.center,
-      child: const Text('3'),
-      color: Colors.purple,
-    )
-  ];
+
 
   @override
   Widget build(BuildContext context) {

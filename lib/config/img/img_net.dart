@@ -25,7 +25,7 @@ class ImgNet{
             return state.completedWidget;
           case LoadState.failed:
             return GestureDetector(
-              child: Stack(
+              child: const Stack(
                 fit: StackFit.expand,
                 children: <Widget>[
                   Icon(Icons.error_rounded,color: Colors.red,),

@@ -44,12 +44,12 @@ class CustomTextSelectionControls extends MaterialTextSelectionControls {
     final selectionText = delegate.textEditingValue.text.substring(
         delegate.textEditingValue.selection.start,
         delegate.textEditingValue.selection.end);
-
     return MyTextSelectionToolbar(
       anchorAbove: anchorAbove,
       anchorBelow: anchorBelow,
       clipboardStatus: clipboardStatus,
       items: items,
+      selection:  delegate.textEditingValue.selection,
       selectionText: selectionText,
       handleCopy: () => handleCopy(delegate, clipboardStatus),
       handleCut: () => handleCut(delegate),
@@ -81,11 +81,12 @@ class MyTextSelectionToolbar extends StatefulWidget {
     this.handleSelectAll,
     required this.items,
     required this.selectionText,
-    required this.callback,
+    required this.callback, required this.selection,
   }) : super(key: key);
 
   final Offset anchorAbove;
   final Offset anchorBelow;
+  final TextSelection selection;
   final ClipboardStatusNotifier? clipboardStatus;
   final void Function()? handleCopy;
   final void Function()? handleCut;
@@ -165,7 +166,7 @@ class MyTextSelectionToolbarState extends State<MyTextSelectionToolbar> {
                 i, widget.items.length),
             onPressed: () {
               if (widget.items[i].onPressed != null) {
-                widget.items[i].onPressed!(widget.selectionText);
+                widget.items[i].onPressed!(widget.selectionText,widget.selection);
               }
               if (selectorItem[widget.items[i].controlType] != null) {
                 selectorItem[widget.items[i].controlType]!();
