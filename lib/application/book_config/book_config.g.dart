@@ -23,13 +23,14 @@ class BookConfigAdapter extends TypeAdapter<BookConfig> {
       textHight: fields[2] == null ? 1 : fields[2] as double,
       textColor: fields[3] == null ? 4280296233 : fields[3] as int,
       bookThem: fields[4] == null ? 1 : fields[4] as int,
+      padding: fields[5] == null ? 1 : fields[5] as double,
     );
   }
 
   @override
   void write(BinaryWriter writer, BookConfig obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.textSize)
       ..writeByte(1)
@@ -39,7 +40,9 @@ class BookConfigAdapter extends TypeAdapter<BookConfig> {
       ..writeByte(3)
       ..write(obj.textColor)
       ..writeByte(4)
-      ..write(obj.bookThem);
+      ..write(obj.bookThem)
+      ..writeByte(5)
+      ..write(obj.padding);
   }
 
   @override
@@ -64,6 +67,8 @@ class ReadModelAdapter extends TypeAdapter<ReadModel> {
         return ReadModel.listView;
       case 1:
         return ReadModel.pageView;
+      case 2:
+        return ReadModel.simulationView;
       default:
         return ReadModel.listView;
     }
@@ -77,6 +82,9 @@ class ReadModelAdapter extends TypeAdapter<ReadModel> {
         break;
       case ReadModel.pageView:
         writer.writeByte(1);
+        break;
+      case ReadModel.simulationView:
+        writer.writeByte(2);
         break;
     }
   }

@@ -15,10 +15,13 @@ class BookConfig extends HiveObject{
    int textColor;
   @HiveField(4,defaultValue: 1)
    int bookThem;
+  @HiveField(5,defaultValue: 1)
+   double padding;
   BookConfig({
     this.textSize=16, this.readModel=ReadModel.listView, this.textHight=1,
     this.textColor=0xff202329,
     this.bookThem=1,
+    this.padding=0,
   });
 
 }
@@ -27,5 +30,7 @@ enum ReadModel{
   @HiveField(0)
   listView,
   @HiveField(1)
-  pageView
+  pageView,
+  @HiveField(2)
+  simulationView
 }

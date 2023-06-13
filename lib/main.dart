@@ -11,4 +11,5 @@ void main() async {
 
 _registerAdapter() {
   Hive.registerAdapter(BookConfigAdapter());
+  Hive.registerAdapter(ReadModelAdapter());
 }

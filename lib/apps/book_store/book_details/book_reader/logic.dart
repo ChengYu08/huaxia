@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:huaxia/config/config.dart';
 import 'package:huaxia/widgets/custom_selectable_text/custom_selectable_text.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 
 class BookReaderLogic extends GetxController {
   var showFistPop = true.obs;
@@ -15,11 +16,11 @@ class BookReaderLogic extends GetxController {
     var m3 = false.obs;
     var m4 = false.obs;
   late String data;
-
+  late Future<double> brightness;
   @override
   void onInit() {
     super.onInit();
-
+    brightness = ScreenBrightness().system;
     data = '''
   \n　　子曰：“为政以德，譬如北辰，居其所而众星共之。”\n
 　子曰：“《诗》三百，一言以蔽之，曰：‘思无邪’。”\n

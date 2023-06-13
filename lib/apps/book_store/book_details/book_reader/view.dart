@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:huaxia/apps/book_store/book_details/book_reader/ui/book_screen_brightness.dart';
 import 'package:huaxia/apps/book_store/book_details/book_reader/ui/book_text_style_menu.dart';
 
 import 'package:huaxia/config/assets/imgs.dart';
@@ -81,11 +82,16 @@ class _BookReaderPageState extends State<BookReaderPage> {
           Obx(() {
             bool b = (logic.m1.value ||logic.m2.value||logic.m3.value||logic.m4.value);
             if(b){
-              return Positioned(child: Container(
-                width: double.infinity,
-                height:  Get.height,
-                color: Colors.black38,
-                margin: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
+              return Positioned(child: GestureDetector(
+                onTap: (){
+                  logic.onTapMenu();
+                },
+                child: Container(
+                  width: double.infinity,
+                  height:  Get.height,
+                  color: Colors.black38,
+                  margin: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
+                ),
               ));
             }else{
               return const SizedBox.shrink();
@@ -93,7 +99,7 @@ class _BookReaderPageState extends State<BookReaderPage> {
           }),
           buildm1(),
           buildm2(),
-          buildm3(),
+          BookScreenBrightness(bookReaderLogic: logic,),
           BookTextStyleMenu(bookReaderLogic: logic),
           buildMenuBottom()
 
