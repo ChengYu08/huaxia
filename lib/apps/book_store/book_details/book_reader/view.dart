@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:huaxia/apps/book_store/book_details/book_reader/ui/book_text_style_menu.dart';
 
 import 'package:huaxia/config/assets/imgs.dart';
 import 'package:huaxia/config/config.dart';
@@ -63,7 +64,7 @@ class _BookReaderPageState extends State<BookReaderPage> {
                               } else if (dx <= cW) {
                                 print("上一页");
                               } else {
-                                print("上一页");
+                                print("下一页");
                               }
                             },
                             onSelectionChanged: (TextSelection selection,
@@ -93,7 +94,7 @@ class _BookReaderPageState extends State<BookReaderPage> {
           buildm1(),
           buildm2(),
           buildm3(),
-          buildm4(),
+          BookTextStyleMenu(bookReaderLogic: logic),
           buildMenuBottom()
 
         ],
@@ -185,22 +186,8 @@ class _BookReaderPageState extends State<BookReaderPage> {
               ),
           );
         });
-  }  Obx buildm4() {
-    return Obx(() {
-          return AnimatedPositioned(
-              left: 0,
-              right: 0,
-              bottom:logic.m4.value?0: -(Get.height * .75 + kBottomNavigationBarHeight),
-              duration: 300.milliseconds,
-              child:Container(
-                margin: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
-                width: double.infinity,
-                height: Get.height * .75,
-                color: Colors.deepPurple,
-              ),
-          );
-        });
   }
+
 
   Obx buildMenuBottom() {
     return Obx(() {

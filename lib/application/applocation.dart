@@ -5,6 +5,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:huaxia/config/config.dart';
 
+import 'book_config/init_binding.dart';
+
 class Application extends StatefulWidget {
   const Application({Key? key}) : super(key: key);
 
@@ -21,6 +23,7 @@ class _ApplicationState extends State<Application> {
       getPages: AppRouters.routers,
       initialRoute: Routers.Initial,
       builder: BotToastInit(),
+      initialBinding: InitBinding(),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,

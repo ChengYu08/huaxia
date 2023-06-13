@@ -187,35 +187,4 @@ class BookReaderLogic extends GetxController {
       m4.value = false;
   }
 
-  Widget menu() {
-    return IndexedStack(
-      index: currentIndex.value,
-      children: [
-        Container(
-          margin: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
-          width: double.infinity,
-          height: Get.height * .75,
-          color: Colors.blue,
-        ),
-        Container(
-          margin: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
-          width: double.infinity,
-          height: Get.height * .75,
-          color: Colors.amber,
-        ),
-        Container(
-          margin: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
-          width: double.infinity,
-          height: Get.height * .75,
-          color: Colors.red,
-        ),
-        Container(
-          margin: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
-          width: double.infinity,
-          height: Get.height * .75,
-          color: Colors.cyanAccent,
-        )
-      ],
-    );
-  }
 }
