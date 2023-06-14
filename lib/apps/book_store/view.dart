@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:huaxia/config/assets/imgs.dart';
 import 'package:huaxia/config/config.dart';
+import 'package:huaxia/widgets/book_cover.dart';
 import 'book_flex_space_bar.dart';
 import 'logic.dart';
 
@@ -126,30 +127,26 @@ class _BookStorePageState extends State<BookStorePage>
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Obx(() {
-                                  return TextButton(
-                                      onPressed: () {
-                                        //全选【true】
-                                        bool show =
-                                            logic.selectBooksOBX.length ==
-                                                logic.books.length;
-
-                                        for (var element in logic.books) {
-                                          element.selectBook.value = !show;
-                                        }
-                                        logic.selectBooksOBX.clear();
-                                        if (!show) {
-                                          logic.selectBooksOBX
-                                              .addAll(logic.books);
-                                        }
-                                      },
-                                      child: Text(
-                                          logic.selectBooksOBX.length ==
-                                                  logic.books.length
-                                              ? '取消全选'
-                                              : '全选',
-                                          style: Get.textTheme.bodySmall));
-                                }),
+                                TextButton(
+                                    onPressed: () {
+                                      //全选【true】
+                                      // bool show =
+                                      //     logic.selectBooksOBX.length ==
+                                      //         logic.books.length;
+                                      //
+                                      // for (var element in logic.books) {
+                                      //   element.selectBook.value = !show;
+                                      // }
+                                      // logic.selectBooksOBX.clear();
+                                      // if (!show) {
+                                      //   logic.selectBooksOBX
+                                      //       .addAll(logic.books);
+                                      // }
+                                      AppToast.toast('删除成功');
+                                    },
+                                    child: Text(
+                                        '删除',
+                                        style: Get.textTheme.bodySmall)),
                                 Column(
                                   children: [
                                     Text('选择书籍',
@@ -193,12 +190,7 @@ class _BookStorePageState extends State<BookStorePage>
                             vertical: 12, horizontal: 14),
                         child: Row(
                           children: [
-                            Container(
-                              width: 64,
-                              height: 88,
-                              color: Colors
-                                  .primaries[index % Colors.primaries.length],
-                            ),
+                            BookCover(title: '论语$index',),
                             const SizedBox(
                               width: 16,
                             ),

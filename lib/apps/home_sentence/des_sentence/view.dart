@@ -107,8 +107,9 @@ class DesSentencePage extends StatelessWidget {
       body: Container(
         margin: const EdgeInsets.only(top: 16, right: 11, left: 11),
         padding: const EdgeInsets.all(12),
-        decoration: const BoxDecoration(
+        decoration:  BoxDecoration(
             color: Colors.white,
+
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20), topRight: Radius.circular(20))),
         child: CustomScrollView(
@@ -120,109 +121,123 @@ class DesSentencePage extends StatelessWidget {
                 elevation: 6,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 17, left: 12, right: 12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '《周易》-象传',
-                        style: Get.textTheme.bodyMedium!.copyWith(fontFamily: 'MaShanZheng'),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 12),
-                        child: Image.asset(
-                          Imgs.ic_quotes,
-                          width: 32,
-                          height: 32,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: Text(
-                          '天行健，君子以自强不息。地势坤，君子以厚德载物。',
-                          style: Get.textTheme.displaySmall!.copyWith(fontFamily: 'ZhiMangXing'),
-                        ),
-                      ),
-                      Row(
+                child: Stack(
+                  children: [
+                   Positioned(
+                       top: 0,
+                       right: 0,
+                       child: Image.asset(Imgs.bg_sentence_des,width: 150,fit: BoxFit.fitWidth,)),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 17, left: 12, right: 12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          TextButton.icon(
-                            onPressed: () {},
-                            icon: Image.asset(
-                              Imgs.ic_like_no,
-                              width: 20,
-                              height: 20,
-                            ),
-                            label:
-                                Text('6474', style: Get.textTheme.labelLarge),
+                          Text(
+                            '《周易》-象传',
+                            style: Get.textTheme.bodyMedium!.copyWith(fontFamily: 'MaShanZheng'),
                           ),
-                          const Spacer(),
-                          ElevatedButton.icon(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 4, horizontal: 10),
-                                backgroundColor: Color(0xffF4F5F7)),
-                            icon: Image.asset(
-                              Imgs.ic_wach,
-                              width: 20,
-                              height: 20,
+                          Padding(
+                            padding: const EdgeInsets.only(top: 12),
+                            child: Image.asset(
+                              Imgs.ic_quotes,
+                              width: 32,
+                              height: 32,
                             ),
-                            label: Text(
-                              '查看出处',
-                              style: Get.textTheme.labelLarge,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            child: Text(
+                              '天行健，君子以自强不息。地势坤，君子以厚德载物。',
+                              style: Get.textTheme.displaySmall!.copyWith(fontFamily: 'ZhiMangXing'),
                             ),
+                          ),
+                          Row(
+                            children: [
+                              TextButton.icon(
+                                onPressed: () {},
+                                icon: Image.asset(
+                                  Imgs.ic_like_no,
+                                  width: 20,
+                                  height: 20,
+                                ),
+                                label:
+                                    Text('6474', style: Get.textTheme.labelLarge),
+                              ),
+                              const Spacer(),
+                              ElevatedButton.icon(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                    padding: EdgeInsets.zero,
+                                    fixedSize: Size(80, 22),
+                                    minimumSize: Size(80, 22),
+                                    maximumSize: Size(80, 22),
+                                    backgroundColor: Color(0xffF4F5F7)),
+                                icon: Image.asset(
+                                  Imgs.ic_wach,
+                                  width: 16,
+                                  height: 16,
+                                ),
+                                label: Text(
+                                  '查看出处',
+                                  style: Get.textTheme.labelSmall,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              ElevatedButton.icon(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+
+                                    padding: EdgeInsets.zero,
+                                    fixedSize: Size(80, 22),
+                                    minimumSize: Size(80, 22),
+                                    maximumSize: Size(80, 22),
+                                    backgroundColor: Color(0xffF4F5F7)),
+                                icon: Image.asset(
+                                  Imgs.ic_text_copy,
+                                  width: 16,
+                                  height: 16  ,
+                                ),
+                                label: Text(
+                                  '复制句子',
+                                  style: Get.textTheme.labelSmall,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 16,
+                              )
+                            ],
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 15, bottom: 27),
+                            child: DottedLine(
+                              direction: Axis.horizontal,
+                              lineLength: double.infinity,
+                              lineThickness: .5,
+                              dashLength: 3.0,
+                              dashColor: Color(0xffE1E2E8),
+                            ),
+                          ),
+                          Text(
+                            '【译文】',
+                            style: Get.textTheme.bodySmall!
+                                .copyWith(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(
-                            width: 5,
+                            height: 8,
                           ),
-                          ElevatedButton.icon(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                backgroundColor: Color(0xffF4F5F7)),
-                            icon: Image.asset(
-                              Imgs.ic_text_copy,
-                              width: 20,
-                              height: 20,
-                            ),
-                            label: Text(
-                              '复制句子',
-                              style: Get.textTheme.labelLarge,
-                            ),
+                          Text(
+                            '天的运动刚强劲健，相应于此，君子处事，应像天一样，自我力求进步，刚毅坚卓，发奋图强，永不停息；大地的气势厚实和顺，君子应增厚美德，容载万物。',
+                            style: Get.textTheme.bodySmall!.copyWith(fontFamily: 'ZCOOLXiaoWei'),
                           ),
                           const SizedBox(
-                            width: 16,
+                            height: 50,
                           )
                         ],
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 15, bottom: 27),
-                        child: DottedLine(
-                          direction: Axis.horizontal,
-                          lineLength: double.infinity,
-                          lineThickness: .5,
-                          dashLength: 3.0,
-                          dashColor: Color(0xffE1E2E8),
-                        ),
-                      ),
-                      Text(
-                        '【译文】',
-                        style: Get.textTheme.bodySmall!
-                            .copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Text(
-                        '天的运动刚强劲健，相应于此，君子处事，应像天一样，自我力求进步，刚毅坚卓，发奋图强，永不停息；大地的气势厚实和顺，君子应增厚美德，容载万物。',
-                        style: Get.textTheme.bodySmall!.copyWith(fontFamily: 'ZCOOLXiaoWei'),
-                      ),
-                      const SizedBox(
-                        height: 50,
-                      )
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

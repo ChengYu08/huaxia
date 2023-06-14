@@ -107,12 +107,12 @@ class BookTextStyleMenu extends StatelessWidget {
         right: 0,
         bottom: bookReaderLogic.m4.value
             ? 0
-            : -Get.height/2,
+            : -220,
         duration: 300.milliseconds,
         child: Container(
-            margin: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
             padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
             width: double.infinity,
+            height: 220,
             decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
