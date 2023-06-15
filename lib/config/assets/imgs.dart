@@ -52,6 +52,9 @@ class Imgs{
   static final String ic_menu =getPath('ic_menu');
   static final String ic_ta =getPath('ic_ta');
   static final String ic_brightness =getPath('ic_brightness');
+  static final String bg_book =getPath('bg_book');
+  static final String bg_home =getPath('bg_home');
+  static final String bg_sentence_des =getPath('bg_sentence_des');
 
 
 

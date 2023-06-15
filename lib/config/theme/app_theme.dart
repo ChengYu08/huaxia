@@ -66,6 +66,8 @@ class AppTheme {
          bodySmall: TextStyle(color: Color(0xff202329), fontSize: 14),
           labelLarge: TextStyle(color: Color(0xff83888F),fontSize: 12),
           labelMedium: TextStyle(color: Color(0xff585F69),fontSize: 11),
+          labelSmall: TextStyle(color: Color(0xff222429),fontSize: 10),
+
       ),
       dividerColor: const Color(0xffC2C6CE),
       dividerTheme: const DividerThemeData(

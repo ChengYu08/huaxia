@@ -1,15 +1,17 @@
 
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:huaxia/config/config.dart';
 
 class BookFlexSpaceBar extends StatelessWidget {
-  const BookFlexSpaceBar({
+   BookFlexSpaceBar({
     super.key,
     required TabController tabController,
   }) : _tabController = tabController;
 
   final TabController _tabController;
+  final PageController _pageController= PageController();
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +19,11 @@ class BookFlexSpaceBar extends StatelessWidget {
       background: Stack(
         children: [
           Positioned.fill(
-            child: Swiper.children(
-              autoplay: true,
+            child: PageView(
+              controller: _pageController,
+              onPageChanged: (i){
+                _tabController.animateTo(i);
+              },
               children: [
                 Image.asset(
                   Imgs.bg_banner_1,
@@ -54,6 +59,9 @@ class BookFlexSpaceBar extends StatelessWidget {
             child: TabBar(controller: _tabController,
                 dividerColor: Colors.transparent,
                 indicatorPadding: EdgeInsets.zero,
+                onTap: (i){
+                _pageController.animateToPage(i, duration: 300.milliseconds, curve: Curves.linear);
+                },
                 labelPadding: EdgeInsets.zero,
                 tabs:const [
                   Tab(

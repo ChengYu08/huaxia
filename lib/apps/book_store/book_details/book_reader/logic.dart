@@ -8,6 +8,7 @@ import 'package:screen_brightness/screen_brightness.dart';
 class BookReaderLogic extends GetxController {
   var showFistPop = true.obs;
   late List<CustomSelectableTextItem> customSelectableTextItems;
+
   var menuBarShow = false.obs;
   var menuBottomShow = false.obs;
   var currentIndex = 0.obs;
@@ -17,6 +18,7 @@ class BookReaderLogic extends GetxController {
     var m4 = false.obs;
   late String data;
   late Future<double> brightness;
+
   @override
   void onInit() {
     super.onInit();
@@ -147,6 +149,8 @@ class BookReaderLogic extends GetxController {
 
   openMenuList(int index) {
     currentIndex.value = index;
+
+
     switch(index){
       case 0:
         m1.value = !m1.value;
@@ -178,7 +182,6 @@ class BookReaderLogic extends GetxController {
         break;
     }
   }
-
   void onTapMenu() {
     menuBottomShow.value = !menuBottomShow.value;
     menuBarShow.value = menuBottomShow.value;
