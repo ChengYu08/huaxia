@@ -175,9 +175,8 @@ class BookTextStyleMenu extends StatelessWidget {
                                 child: Slider(
                                     value: value.padding,
                                     min: 0,
-                                    max: 20,
+                                    max: 40,
                                     label: '${value.padding}',
-                                    divisions: 4,
                                     onChangeEnd: (v) {
                                       value.padding = v;
                                       appConfig.upBookConfig(value);
@@ -208,7 +207,6 @@ class BookTextStyleMenu extends StatelessWidget {
                                     min: 0.7,
                                     max: 2,
                                     label: '${value.textHight}',
-
                                     onChangeEnd: (v) {
                                       value.textHight = v;
                                       appConfig.upBookConfig(value);

@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:huaxia/application/book_config/app_book_config.dart';
 import 'package:huaxia/apps/book_store/book_details/book_reader/ui/book_appbar_menu.dart';
 import 'package:huaxia/apps/book_store/book_details/book_reader/ui/book_bottom_menu.dart';
 import 'package:huaxia/apps/book_store/book_details/book_reader/ui/book_screen_brightness.dart';
 import 'package:huaxia/apps/book_store/book_details/book_reader/ui/book_text_style_menu.dart';
 import 'package:huaxia/apps/book_store/book_details/book_reader/ui/introduce_menu.dart';
-
-import 'package:huaxia/config/assets/imgs.dart';
-import 'package:huaxia/config/config.dart';
 import 'package:huaxia/widgets/custom_selectable_text/custom_selectable_text.dart';
-import 'package:huaxia/widgets/custom_selectable_text/src/custom_text_selection_controls.dart';
-
+import 'package:huaxia/widgets/flutter_html/flutter_html.dart';
 import 'logic.dart';
 
 class BookReaderPage extends StatefulWidget {
@@ -23,7 +20,7 @@ class BookReaderPage extends StatefulWidget {
 
 class _BookReaderPageState extends State<BookReaderPage> {
   final logic = Get.find<BookReaderLogic>();
-
+  final appBookConfig = Get.find<AppBookConfig>();
 
   @override
   void initState() {
@@ -33,8 +30,9 @@ class _BookReaderPageState extends State<BookReaderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BookBottomMenu(bookReaderLogic: logic,),
-
+      bottomNavigationBar: BookBottomMenu(
+        bookReaderLogic: logic,
+      ),
       body: Stack(
         fit: StackFit.expand,
         clipBehavior: Clip.none,
@@ -44,27 +42,45 @@ class _BookReaderPageState extends State<BookReaderPage> {
               width: Get.width,
               height: Get.height,
               decoration: const BoxDecoration(color: Colors.white),
-              child: ListView(
-                children: [
-                  ValueListenableBuilder(
-                      valueListenable: logic.docVN,
-                      builder: (context, data, child) {
-                        return TextSelectionGestureDetector(
-                          onSingleTapUp: (des) {},
-                          child: CustomSelectableText.rich(
-                            TextSpan(text: data),
+              child: ValueListenableBuilder(
+                  valueListenable: logic.docVN,
+                  builder: (context, data, child) {
+                    return ValueListenableBuilder(
+                      valueListenable: appBookConfig.bookConfigVN,
+                      builder: (BuildContext context, bookConfig, Widget? child) {
+                        return AnimatedContainer(
+                          duration: 300.milliseconds,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: bookConfig.padding),
+                          child: SelectableHtml(
+                            data: data,
                             items: logic.customSelectableTextItems,
+                            style: {
+                              'p':Style(
+                                  fontSize: FontSize(bookConfig.textSize),
+                                  lineHeight: LineHeight(bookConfig.textHight)
+                              )
+                            },
                             onSingleTapUp: (TapDragUpDetails tap) {
                               final dx = tap.localPosition.dx;
                               final cW = Get.width / 3;
                               if (dx > (2 * cW)) {
                                 print("下一页");
+                                // logic.controller.nextPage(
+                                //     duration: 300.milliseconds,
+                                //     curve: Curves.linear);
                               } else if (dx >= cW && dx <= (cW * 2)) {
                                 print("菜单");
                                 logic.onTapMenu();
                               } else if (dx <= cW) {
+                                // logic.controller.previousPage(
+                                //     duration: 300.milliseconds,
+                                //     curve: Curves.linear);
                                 print("上一页");
                               } else {
+                                // logic.controller.nextPage(
+                                //     duration: 300.milliseconds,
+                                //     curve: Curves.linear);
                                 print("下一页");
                               }
                             },
@@ -72,18 +88,24 @@ class _BookReaderPageState extends State<BookReaderPage> {
                                 SelectionChangedCause? cause) {},
                           ),
                         );
-                      }),
-                ],
-              ),
+                      },
+
+                    );
+                  }),
             ),
           ),
           // BookBottomMenu(bookReaderLogic: logic),
-          BookAppbarMenu(bookReaderLogic: logic,),
+          BookAppbarMenu(
+            bookReaderLogic: logic,
+          ),
           Obx(() {
-            bool b = (logic.m1.value || logic.m2.value || logic.m3.value ||
+            bool b = (logic.m1.value ||
+                logic.m2.value ||
+                logic.m3.value ||
                 logic.m4.value);
             if (b) {
-              return Positioned(child: GestureDetector(
+              return Positioned(
+                  child: GestureDetector(
                 onTap: () {
                   logic.onTapMenu();
                 },
@@ -91,8 +113,8 @@ class _BookReaderPageState extends State<BookReaderPage> {
                   width: double.infinity,
                   height: Get.height,
                   color: Colors.black38,
-                  margin: const EdgeInsets.only(
-                      bottom: kBottomNavigationBarHeight),
+                  margin:
+                      const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
                 ),
               ));
             } else {
@@ -101,9 +123,13 @@ class _BookReaderPageState extends State<BookReaderPage> {
           }),
           buildm1(),
           buildm2(),
-          BookScreenBrightness(bookReaderLogic: logic,),
+          BookScreenBrightness(
+            bookReaderLogic: logic,
+          ),
           BookTextStyleMenu(bookReaderLogic: logic),
-          IntroduceMenu(bookReaderLogic: logic,),
+          IntroduceMenu(
+            bookReaderLogic: logic,
+          ),
         ],
       ),
     );
@@ -123,8 +149,7 @@ class _BookReaderPageState extends State<BookReaderPage> {
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
-                topRight: Radius.circular(20), topLeft: Radius.circular(20)
-            ),
+                topRight: Radius.circular(20), topLeft: Radius.circular(20)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -136,26 +161,37 @@ class _BookReaderPageState extends State<BookReaderPage> {
                     height: 88,
                     color: Colors.red,
                   ),
-                  const SizedBox(width: 13,),
+                  const SizedBox(
+                    width: 13,
+                  ),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('三体', style: Get.textTheme.headlineMedium!
-                            .copyWith(fontWeight: FontWeight.w500),),
-                        Text('共112章', style: Get.textTheme.labelLarge!.copyWith(
-                            fontSize: 14),),
+                        Text(
+                          '三体',
+                          style: Get.textTheme.headlineMedium!
+                              .copyWith(fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          '共112章',
+                          style: Get.textTheme.labelLarge!.copyWith(
+                            fontSize: 14,
+                          ),
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('已读1%',
-                              style: Get.textTheme.labelLarge!.copyWith(
-                                  fontSize: 14),),
-                            TextButton.icon(onPressed: () {
-
-                            },
+                            Text(
+                              '已读1%',
+                              style: Get.textTheme.labelLarge!
+                                  .copyWith(fontSize: 14),
+                            ),
+                            TextButton.icon(
+                              onPressed: () {},
                               icon: Icon(Icons.arrow_drop_down_sharp),
-                              label: Text('去当前'),)
+                              label: Text('去当前'),
+                            )
                           ],
                         ),
                       ],
@@ -175,8 +211,9 @@ class _BookReaderPageState extends State<BookReaderPage> {
       return AnimatedPositioned(
         left: 0,
         right: 0,
-        bottom: logic.m2.value ? 0 : -(Get.height * .75 +
-            kBottomNavigationBarHeight),
+        bottom: logic.m2.value
+            ? 0
+            : -(Get.height * .75 + kBottomNavigationBarHeight),
         duration: 300.milliseconds,
         child: Container(
           margin: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
@@ -187,6 +224,4 @@ class _BookReaderPageState extends State<BookReaderPage> {
       );
     });
   }
-
-
 }

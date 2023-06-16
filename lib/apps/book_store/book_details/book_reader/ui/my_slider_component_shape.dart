@@ -4,7 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '';
+
 class MySliderComponentShape extends SliderComponentShape{
   const MySliderComponentShape( {
      this.text,
@@ -134,7 +134,7 @@ class MySliderComponentShape extends SliderComponentShape{
     );
     a2.addText(t2);
     ui.Paragraph a2p = a2.build();
-    a2p.layout( ui.ParagraphConstraints(width: 15));
+    a2p.layout( ui.ParagraphConstraints(width: 18));
     canvas.drawParagraph(a2p, Offset(parentBox.constraints.maxWidth-enabledThumbRadius*1.5-6, center.dy-8));
 
     canvas.drawCircle(
