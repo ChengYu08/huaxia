@@ -76,7 +76,6 @@ class LoginPage extends StatelessWidget {
                       style: TextStyle(
                           color: Get.theme.primaryColor, height: 2,fontSize: 13)
                   ),
-
                   TextSpan(
                       text: '《自动续费协议》',
                       recognizer: TapGestureRecognizer()

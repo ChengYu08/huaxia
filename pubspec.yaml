@@ -46,6 +46,7 @@ dependencies:
   status_bar_control: ^3.2.1
   bot_toast: ^4.0.4
   wechat_kit: ^6.0.1
+  flutter_tts: ^3.7.0
 #  html: ^0.15.4
 dev_dependencies:
   flutter_test:
