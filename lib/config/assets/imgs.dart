@@ -57,6 +57,12 @@ class Imgs{
   static final String bg_sentence_des =getPath('bg_sentence_des');
 
 
+  static final String bg_login =getPath('bg_login');
+  static final String bg_login_text =getPath('bg_login_text');
+  static final String logo =getPath('logo');
+  static final String wechat_fill =getPath('wechat_fill');
+
+
 
 
 

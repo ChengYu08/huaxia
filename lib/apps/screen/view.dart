@@ -14,7 +14,7 @@ class _ScreenPageState extends State<ScreenPage> {
 @override
   void initState() {
   Future.delayed(1000.milliseconds,(){
-    Get.offAndToNamed(Routers.home);
+    Get.offAndToNamed(Routers.login);
   });
     super.initState();
   }
