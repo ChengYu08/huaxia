@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:huaxia/config/assets/imgs.dart';
+import 'package:huaxia/config/config.dart';
 import 'package:huaxia/config/wechat/wechat.dart';
 import 'package:wechat_kit/wechat_kit.dart';
 
@@ -36,7 +37,8 @@ class LoginPage extends StatelessWidget {
                   height: 48,
                   width: double.infinity,
                   child: ElevatedButton.icon(onPressed: (){
-                    WeChatConfig.login();
+                    Get.offAndToNamed(Routers.home);
+                    // WeChatConfig.login();
                   }, icon: Image.asset(Imgs.wechat_fill,width: 24,height: 24,),label: const Text('微信登录'),)),
             ),
             const Spacer(),

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:targetCellWidth="4"
+    android:targetCellHeight="2"
+    android:maxResizeWidth="600dp"
+    android:maxResizeHeight="400dp"
+    android:updatePeriodMillis="86400000"
+    android:description="@string/appwidget_description"
+    android:initialLayout="@layout/appwidget_provider_layout"
+    android:previewImage="@drawable/bg_preview"
+    android:resizeMode="horizontal|vertical"
+    android:widgetFeatures="reconfigurable|configuration_optional">
+</appwidget-provider>
+    <!--    android:previewLayout="@layout/example_appwidget_preview"-->
+    <!--    android:initialLayout="@layout/example_loading_appwidget"-->
