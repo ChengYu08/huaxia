@@ -36,7 +36,7 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        <receiver android:name="com.huaxia.wxj.novelstudy.huaxia.HomeAppWidgetProvider"
+        <receiver android:name="HomeAppWidgetProvider"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

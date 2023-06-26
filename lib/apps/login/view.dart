@@ -37,8 +37,8 @@ class LoginPage extends StatelessWidget {
                   height: 48,
                   width: double.infinity,
                   child: ElevatedButton.icon(onPressed: (){
-                    Get.offAndToNamed(Routers.home);
-                    // WeChatConfig.login();
+
+                    WeChatConfig.login();
                   }, icon: Image.asset(Imgs.wechat_fill,width: 24,height: 24,),label: const Text('微信登录'),)),
             ),
             const Spacer(),

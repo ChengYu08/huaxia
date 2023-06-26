@@ -1,7 +1,7 @@
-package com.huaxia.wxj.novelstudy.huaxia
+package com.huaxia.wxj.novelstudy
 
 import android.appwidget.AppWidgetManager
-import android.appwidget.AppWidgetProvider
+
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri

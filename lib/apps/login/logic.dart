@@ -1,6 +1,9 @@
 import 'dart:async';
 
+import 'package:bot_toast/bot_toast.dart';
 import 'package:get/get.dart';
+import 'package:huaxia/config/config.dart';
+import 'package:huaxia/config/routers/app_routers.dart';
 import 'package:wechat_kit/wechat_kit.dart';
 
 class LoginLogic extends GetxController {
@@ -10,6 +13,7 @@ class LoginLogic extends GetxController {
  WechatAuthResp? _authResp;
  @override
   void onInit() {
+
   _respSubs = WechatKitPlatform.instance.respStream().listen(_listenResp);
     super.onInit();
   }
@@ -18,6 +22,15 @@ class LoginLogic extends GetxController {
   if (resp is WechatAuthResp) {
    _authResp = resp;
    final String content = 'auth: ${resp.errorCode} ${resp.errorMsg}';
+
+   if(_authResp?.isCancelled==true){
+    AppToast.toast('取消登录');
+   }
+   if(_authResp?.isSuccessful==true){
+
+    // Api.wechat_login(_authResp.)
+    // Get.offAndToNamed(Routers.home);
+   }
    Get.log('登录:$content');
   } else if (resp is WechatShareMsgResp) {
    final String content = 'share: ${resp.errorCode} ${resp.errorMsg}';
