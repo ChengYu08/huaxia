@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:huaxia/config/config.dart';
 import 'package:huaxia/config/routers/app_routers.dart';
 import 'package:wechat_kit/wechat_kit.dart';
+import 'package:wechat_kit_extension/wechat_kit_extension.dart';
 
 class LoginLogic extends GetxController {
  var show = false.obs;
@@ -19,14 +20,22 @@ class LoginLogic extends GetxController {
   }
 
  void _listenResp(WechatResp resp) {
+
   if (resp is WechatAuthResp) {
    _authResp = resp;
-   final String content = 'auth: ${resp.errorCode} ${resp.errorMsg}';
+   final String content = 'auth: $_authResp';
 
    if(_authResp?.isCancelled==true){
+     Get.log('======取消了登录==========');
     AppToast.toast('取消登录');
    }
    if(_authResp?.isSuccessful==true){
+    // final WechatAccessTokenResp accessTokenResp =
+    //     await WechatExtension.getAccessTokenUnionID(
+    //  appId: kWechatAppID,
+    //  appSecret: kWechatAppSecret,
+    //  code: _authResp!.code!,
+    // );
 
     // Api.wechat_login(_authResp.)
     // Get.offAndToNamed(Routers.home);
