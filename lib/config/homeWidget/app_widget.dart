@@ -14,7 +14,6 @@ class AppWidget {
         await HomeWidget.saveWidgetData('message', message);
       }
     }
-
     _upWidget();
   }
 
@@ -22,7 +21,6 @@ class AppWidget {
     return HomeWidget.updateWidget(
         name: 'HomeAppWidgetProvider',
         iOSName: '',
-        qualifiedAndroidName:
-            'com.huaxia.wxj.novelstudy.huaxia.HomeAppWidgetProvider');
+        qualifiedAndroidName: 'com.huaxia.wxj.novelstudy.HomeAppWidgetProvider');
   }
 }

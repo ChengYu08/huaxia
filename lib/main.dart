@@ -4,6 +4,7 @@ import 'package:huaxia/application/applocation.dart';
 import 'package:huaxia/application/book_config/book_config.dart';
 import 'package:home_widget/home_widget.dart';
 
+import 'apps/login/model/user_model.dart';
 import 'config/wechat/wechat.dart';
 
 void main() async {
@@ -20,6 +21,8 @@ void main() async {
 _registerAdapter() {
   Hive.registerAdapter(BookConfigAdapter());
   Hive.registerAdapter(ReadModelAdapter());
+  Hive.registerAdapter(UserModelAdapter());
+  Hive.registerAdapter(UserAdapter());
 }
 
 

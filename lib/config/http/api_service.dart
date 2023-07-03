@@ -106,6 +106,7 @@ class ApiService {
     Options options = Options(
       method: method,
       headers: header,
+
       sendTimeout: sendTimeout.milliseconds,
       receiveTimeout: receiveTimeout.milliseconds,
     );
@@ -218,6 +219,7 @@ class ApiService {
 class ApiResult<T> {
   final int status;
   final String message;
+   int? total;
   final T? data;
 
 
@@ -238,17 +240,21 @@ class ApiResult<T> {
     DataParser<T>? dataParser,
   })  : status = response.data?['code'] ?? -1,
         message = response.data?['msg'] ?? '',
-        data = response.data?['data'] == null
-            ? null
-            : dataParser?.call(response.data?['data']) ??
-                response.data?['data'];
+        total = response.data?['total'] ?? 0,
+        data = response.data?['data'] != null
+                ?(dataParser?.call(response.data?['data']) ?? response.data?['data']):
+                 response.data?['rows']!=null
+                 ?(dataParser?.call(response.data?['rows'])?? response.data?['rows'])
+                 :null;
 
   Json toJson() => {
         'status': status,
         'message': message,
         'data': data,
-
       };
+
+
+
   factory ApiResult.error(DioException error){
       switch(error.type){
         case DioExceptionType.cancel:

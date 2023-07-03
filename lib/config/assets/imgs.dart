@@ -62,6 +62,9 @@ class Imgs{
   static final String logo =getPath('logo');
   static final String wechat_fill =getPath('wechat_fill');
 
+  static final String bg_start =getPath('bg_start');
+  static final String bg_start_text =getPath('bg_start_text');
+
 
 
 

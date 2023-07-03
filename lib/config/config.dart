@@ -7,7 +7,9 @@ export 'img/img_net.dart';
 export 'toast/app_toast.dart';
 export 'homeWidget/app_widget.dart';
 export 'http/api/api.dart';
-const appPath = AppPath.DEBUG;
+export 'http/api/api_url.dart';
+export 'http/api_service.dart';
+const appPath = AppPath.RELEASE;
 enum AppPath{
   RELEASE,
   DEBUG,

@@ -2,6 +2,7 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
+import 'package:huaxia/apps/book_store/model/BookList.dart';
 import 'package:huaxia/config/assets/imgs.dart';
 import 'package:huaxia/config/config.dart';
 import 'package:huaxia/widgets/book_cover.dart';
@@ -21,6 +22,9 @@ class _BookStorePageState extends State<BookStorePage>
   @override
   void initState() {
     _tabController = TabController(vsync: this, length: 4);
+    _tabController.addListener(() {
+      logic.intBookList(_tabController.index);
+    });
     super.initState();
   }
 
@@ -54,7 +58,7 @@ class _BookStorePageState extends State<BookStorePage>
                         '书城',
                         style: logic.changedBook.value == 0
                             ? Get.textTheme.titleLarge!
-                                .copyWith(fontWeight: FontWeight.bold)
+                            .copyWith(fontWeight: FontWeight.bold)
                             : Get.textTheme.titleSmall,
                       )),
                   TextButton(
@@ -65,7 +69,7 @@ class _BookStorePageState extends State<BookStorePage>
                         '书架',
                         style: logic.changedBook.value == 1
                             ? Get.textTheme.titleLarge!
-                                .copyWith(fontWeight: FontWeight.bold)
+                            .copyWith(fontWeight: FontWeight.bold)
                             : Get.textTheme.titleSmall,
                       )),
                 ],
@@ -76,157 +80,110 @@ class _BookStorePageState extends State<BookStorePage>
                   : null,
               bottom: logic.changedBook.value == 0
                   ? PreferredSize(
-                      preferredSize: const Size.fromHeight(50),
-                      child: Container(
-                        padding:
-                            const EdgeInsets.only(left: 24, top: 20, bottom: 3),
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(20),
-                                topLeft: Radius.circular(20))),
-                        alignment: Alignment.bottomLeft,
-                        child: Text('推荐古籍', style: Get.textTheme.bodyLarge),
-                      ))
+                  preferredSize: const Size.fromHeight(50),
+                  child: Container(
+                    padding:
+                    const EdgeInsets.only(left: 24, top: 20, bottom: 3),
+                    decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(20),
+                            topLeft: Radius.circular(20))),
+                    alignment: Alignment.bottomLeft,
+                    child: Text('推荐古籍', style: Get.textTheme.bodyLarge),
+                  ))
                   : PreferredSize(
-                      preferredSize: const Size.fromHeight(50),
-                      child: Obx(() {
-                        if (logic.selectBook.value == 0) {
-                          return Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Row(
+                  preferredSize: const Size.fromHeight(50),
+                  child: Obx(() {
+                    if (logic.selectBook.value == 0) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          children: [
+                            Text('我的书架',
+                                style: Get.textTheme.bodyLarge!
+                                    .copyWith(fontWeight: FontWeight.bold)),
+                            const SizedBox(
+                              width: 12,
+                            ),
+                            Text('共27本', style: Get.textTheme.labelLarge),
+                            const Spacer(),
+                            TextButton.icon(
+                              onPressed: () {
+                                logic.selectBook.value = 1;
+                              },
+                              icon: Image.asset(
+                                Imgs.ic_check,
+                                width: 20,
+                                height: 20,
+                              ),
+                              label: Text(
+                                '选择',
+                                style: Get.textTheme.bodySmall,
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    } else {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton(
+                                onPressed: () {
+                                  //全选【true】
+                                  // bool show =
+                                  //     logic.selectBooksOBX.length ==
+                                  //         logic.books.length;
+                                  //
+                                  // for (var element in logic.books) {
+                                  //   element.selectBook.value = !show;
+                                  // }
+                                  // logic.selectBooksOBX.clear();
+                                  // if (!show) {
+                                  //   logic.selectBooksOBX
+                                  //       .addAll(logic.books);
+                                  // }
+                                  AppToast.toast('删除成功');
+                                },
+                                child: Text(
+                                    '删除',
+                                    style: Get.textTheme.bodySmall)),
+                            Column(
                               children: [
-                                Text('我的书架',
-                                    style: Get.textTheme.bodyLarge!
-                                        .copyWith(fontWeight: FontWeight.bold)),
-                                const SizedBox(
-                                  width: 12,
-                                ),
-                                Text('共27本', style: Get.textTheme.labelLarge),
-                                const Spacer(),
-                                TextButton.icon(
-                                  onPressed: () {
-                                    logic.selectBook.value = 1;
-                                  },
-                                  icon: Image.asset(
-                                    Imgs.ic_check,
-                                    width: 20,
-                                    height: 20,
-                                  ),
-                                  label: Text(
-                                    '选择',
-                                    style: Get.textTheme.bodySmall,
-                                  ),
-                                )
+                                Text('选择书籍',
+                                    style: Get.textTheme.bodySmall!
+                                        .copyWith(
+                                        fontWeight: FontWeight.bold)),
+                                Obx(() {
+                                  return Text(
+                                      '已选择${logic.selectBooksOBX.length}本书籍',
+                                      style: Get.textTheme.labelLarge);
+                                }),
                               ],
                             ),
-                          );
-                        } else {
-                          return Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                TextButton(
-                                    onPressed: () {
-                                      //全选【true】
-                                      // bool show =
-                                      //     logic.selectBooksOBX.length ==
-                                      //         logic.books.length;
-                                      //
-                                      // for (var element in logic.books) {
-                                      //   element.selectBook.value = !show;
-                                      // }
-                                      // logic.selectBooksOBX.clear();
-                                      // if (!show) {
-                                      //   logic.selectBooksOBX
-                                      //       .addAll(logic.books);
-                                      // }
-                                      AppToast.toast('删除成功');
-                                    },
-                                    child: Text(
-                                        '删除',
-                                        style: Get.textTheme.bodySmall)),
-                                Column(
-                                  children: [
-                                    Text('选择书籍',
-                                        style: Get.textTheme.bodySmall!
-                                            .copyWith(
-                                                fontWeight: FontWeight.bold)),
-                                    Obx(() {
-                                      return Text(
-                                          '已选择${logic.selectBooksOBX.length}本书籍',
-                                          style: Get.textTheme.labelLarge);
-                                    }),
-                                  ],
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    logic.selectBook.value = 0;
-                                  },
-                                  child: Text(
-                                    '取消',
-                                    style: Get.textTheme.bodySmall,
-                                  ),
-                                )
-                              ],
-                            ),
-                          );
-                        }
-                      })),
+                            TextButton(
+                              onPressed: () {
+                                logic.selectBook.value = 0;
+                              },
+                              child: Text(
+                                '取消',
+                                style: Get.textTheme.bodySmall,
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    }
+                  })),
             );
           }),
           SliverPadding(
             sliver: Obx(() {
-              final bookStore = SliverPrototypeExtentList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    return GestureDetector(
-                      onTap: (){
-                        Get.toNamed(Routers.bookDetailsPage);
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 8),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 14),
-                        child: Row(
-                          children: [
-                            BookCover(title: '论语$index',),
-                            const SizedBox(
-                              width: 16,
-                            ),
-                            Expanded(
-                                child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  '论语',
-                                  style: Get.textTheme.bodyMedium!
-                                      .copyWith(fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                Expanded(
-                                    child: Text(
-                                  '以语录体为主，叙事体为辅，较为集中地体现了孔子及儒家学派的政治主张、伦理思想、'
-                                  '道德观念、教育原则等。以语录体为主，叙事体为辅，较为集中地体现了孔子及儒家学派的政治主张、伦理思想、'
-                                  '道德观念、教育原则等。',
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Get.textTheme.labelLarge,
-                                ))
-                              ],
-                            ))
-                          ],
-                        ),
-                      ),
-                    );
-                  }, childCount: 10),
-                  prototypeItem: const SizedBox(
-                    width: double.infinity,
-                    height: 120,
-                  ));
+              final bookStore = BookListWidget(
+                controller: _tabController, rxMap: logic.bookList,);
               final books = Obx(() {
                 bool isShow = logic.selectBook.value == 1;
                 return SliverGrid(
@@ -239,7 +196,7 @@ class _BookStorePageState extends State<BookStorePage>
                   delegate: SliverChildBuilderDelegate((context, index) {
                     final Book book = logic.books[index];
                     return InkWell(
-                      onTap: (){
+                      onTap: () {
                         Get.toNamed(Routers.bookDetailsPage);
                       },
                       child: Column(
@@ -264,22 +221,24 @@ class _BookStorePageState extends State<BookStorePage>
                                         color: const Color(0xffF5A740),
                                         child: Center(
                                             child: Text(
-                                          '$index%',
-                                          style: TextStyle(
-                                              color: Colors.white, fontSize: 10),
-                                        )),
+                                              '$index%',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10),
+                                            )),
                                       ),
                                     ),
                                   ),
                                   if (isShow)
                                     ValueListenableBuilder(
                                       valueListenable: book.selectBook,
-                                      builder: (BuildContext context, bool value,
+                                      builder: (BuildContext context,
+                                          bool value,
                                           Widget? child) {
                                         return GestureDetector(
                                           onTap: () {
                                             book.selectBook.value =
-                                                !book.selectBook.value;
+                                            !book.selectBook.value;
                                             if (book.selectBook.value) {
                                               logic.selectBooksOBX.add(book);
                                             } else {
@@ -297,16 +256,16 @@ class _BookStorePageState extends State<BookStorePage>
                                               duration: 300.milliseconds,
                                               child: value
                                                   ? Icon(
-                                                      key: ValueKey(1),
-                                                      Icons.check_circle_rounded,
-                                                      color:
-                                                          Get.theme.primaryColor,
-                                                    )
+                                                key: ValueKey(1),
+                                                Icons.check_circle_rounded,
+                                                color:
+                                                Get.theme.primaryColor,
+                                              )
                                                   : Icon(
-                                                      Icons.check_circle_outlined,
-                                                      key: ValueKey(2),
-                                                      color: Colors.white,
-                                                    ),
+                                                Icons.check_circle_outlined,
+                                                key: ValueKey(2),
+                                                color: Colors.white,
+                                              ),
                                             ),
                                           ),
                                         );
@@ -343,12 +302,106 @@ class _BookStorePageState extends State<BookStorePage>
   }
 }
 
+class BookListWidget extends StatefulWidget {
+  final RxMap rxMap;
+  final TabController controller;
+
+  const BookListWidget({
+    super.key, required this.rxMap, required this.controller,
+  });
+
+  @override
+  State<BookListWidget> createState() => _BookListWidgetState();
+}
+
+class _BookListWidgetState extends State<BookListWidget> {
+
+  @override
+  void initState() {
+    widget.controller.addListener(() {
+      setState(() {
+
+      });
+    });
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      return FutureBuilder<ApiResult<List<BookList>>>(
+        future: widget.rxMap[widget.controller.index],
+        builder: (context, snapshot) {
+                if(snapshot.hasError){
+                  return  SliverToBoxAdapter(child: Text('${snapshot.error??''}'));
+                }
+
+              if(snapshot.hasData){
+               final listData= snapshot.data?.data??[];
+
+          return SliverPrototypeExtentList(
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      final data = listData[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Get.toNamed(Routers.bookDetailsPage);
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 14),
+                          child: Row(
+                            children: [
+                              BookCover(title: '${data.name}',),
+                              const SizedBox(
+                                width: 16,
+                              ),
+                              Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .start,
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        data.author??'--',
+                                        style: Get.textTheme.bodyMedium!
+                                            .copyWith(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      Expanded(
+                                          child: Text(
+                                            '${data.synopsis}',
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Get.textTheme.labelLarge,
+                                          ))
+                                    ],
+                                  ))
+                            ],
+                          ),
+                        ),
+                      );
+                    }, childCount: listData.length),
+                    prototypeItem: const SizedBox(
+                      width: double.infinity,
+                      height: 120,
+                    ));
+              }
+              return const SliverToBoxAdapter(child: CircularProgressIndicator());
+
+        }
+      );
+    });
+  }
+}
+
 class TrianglePath extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     var path = Path()
-      ..relativeLineTo(size.width, 0)
-      ..relativeLineTo(0, size.height)
+      ..relativeLineTo(size.width, 0)..relativeLineTo(0, size.height)
       ..relativeCubicTo(
         0,
         0,

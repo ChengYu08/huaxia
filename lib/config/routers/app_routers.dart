@@ -9,13 +9,13 @@ import 'package:huaxia/apps/home_sentence/binding.dart';
 import 'package:huaxia/apps/home_sentence/des_sentence/binding.dart';
 import 'package:huaxia/apps/home_sentence/des_sentence/view.dart';
 import 'package:huaxia/apps/home_sentence/view.dart';
-import 'package:huaxia/apps/login/binding.dart';
+
 import 'package:huaxia/apps/login/view.dart';
 import 'package:huaxia/apps/me/me/binding.dart';
 import 'package:huaxia/apps/me/me/sentence/binding.dart';
 import 'package:huaxia/apps/me/me/sentence/view.dart';
 import 'package:huaxia/apps/me/me/view.dart';
-import 'package:huaxia/apps/screen/binding.dart';
+
 import 'package:huaxia/apps/screen/view.dart';
 
 import '../../apps/book_store/book_details/binding.dart';
@@ -49,12 +49,12 @@ class AppRouters{
         name: Routers.Initial,
         page: () {
           return  ScreenPage();
-        },binding: ScreenBinding()),
+        }),
     GetPage(
         name: Routers.login,
         page: () {
           return  LoginPage();
-        },binding: LoginBinding()),
+        }),
     GetPage(
         name: Routers.home,
         page: () =>HomePage(),

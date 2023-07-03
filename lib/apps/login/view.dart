@@ -36,10 +36,8 @@ class LoginPage extends StatelessWidget {
               child: SizedBox(
                   height: 48,
                   width: double.infinity,
-                  child: ElevatedButton.icon(onPressed: (){
-
-                    WeChatConfig.login();
-                  }, icon: Image.asset(Imgs.wechat_fill,width: 24,height: 24,),label: const Text('微信登录'),)),
+                  child: ElevatedButton.icon(onPressed: logic.wechatLogin,
+                    icon: Image.asset(Imgs.wechat_fill,width: 24,height: 24,),label: const Text('微信登录'),)),
             ),
             const Spacer(),
             RichText(

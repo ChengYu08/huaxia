@@ -16,7 +16,6 @@ class AppBookConfig extends GetxService {
   void onInit() {
     AppWidget.upWidgetData(title: '汉皇重色思倾国\n御宇多年求不得\n杨家有女初长成\n养在深闺人未识\n',message: '《白居易》');
       initBox();
-
   }
 
   @override
