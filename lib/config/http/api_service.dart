@@ -33,12 +33,14 @@ class ApiService {
     _dio = Dio(
       BaseOptions(
         baseUrl: ApiUrl.BASE_URL,
+        contentType: Headers.multipartFormDataContentType,
         connectTimeout: connectTimeout.milliseconds,
         sendTimeout: sendTimeout.milliseconds,
         receiveTimeout: receiveTimeout.milliseconds,
 
       ),
     );
+    dio.options.headers['userType']='member';
     dio.interceptors.add(PrettyDioLogger(
         requestHeader: true,
         requestBody: true,
