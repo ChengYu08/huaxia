@@ -373,7 +373,7 @@ class _BookListWidgetState extends State<BookListWidget> {
                                   Expanded(
                                       child: Text(
                                         '${data.synopsis}',
-                                        maxLines: 2,
+                                        maxLines: 3,
                                         overflow: TextOverflow.ellipsis,
                                         style: Get.textTheme.labelLarge,
                                       ))
