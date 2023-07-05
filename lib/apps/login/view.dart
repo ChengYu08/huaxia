@@ -83,7 +83,7 @@ class LoginPage extends StatelessWidget {
 
                         },
                       style: TextStyle(
-                          color: Get.theme.primaryColor!,height: 2, fontSize: 13)
+                          color: Get.theme.primaryColor,height: 2, fontSize: 13)
                   ),
                 ])),
             const SizedBox(height: 80,)

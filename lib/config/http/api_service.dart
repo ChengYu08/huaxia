@@ -33,7 +33,6 @@ class ApiService {
     _dio = Dio(
       BaseOptions(
         baseUrl: ApiUrl.BASE_URL,
-        contentType: Headers.multipartFormDataContentType,
         connectTimeout: connectTimeout.milliseconds,
         sendTimeout: sendTimeout.milliseconds,
         receiveTimeout: receiveTimeout.milliseconds,
@@ -45,7 +44,7 @@ class ApiService {
         requestHeader: true,
         requestBody: true,
         responseBody: true,
-        responseHeader: false,
+        responseHeader: true,
         error: true,
         compact: true,
         maxWidth: 90));
@@ -108,7 +107,7 @@ class ApiService {
     Options options = Options(
       method: method,
       headers: header,
-
+      contentType: Headers.jsonContentType,
       sendTimeout: sendTimeout.milliseconds,
       receiveTimeout: receiveTimeout.milliseconds,
     );
@@ -122,12 +121,16 @@ class ApiService {
       );
 
       final result = ApiResult<T>.fromResponse(res, dataParser: dataParser);
+        if(result.failed){
+          return Future.error(result);
+        }else{
+          return result;
+        }
 
 
-      return result;
     } on DioException catch(e,s) {
 
-      return ApiResult.error(e);
+      return Future.error(ApiResult.error(e));
     }
   }
 
@@ -227,7 +230,7 @@ class ApiResult<T> {
 
   bool get failed => status != 200;
 
-  bool get success => status == 0;
+  bool get success => status == 200;
 
   bool get invalidToken => status == 402;
 

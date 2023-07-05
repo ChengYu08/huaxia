@@ -14,17 +14,17 @@ T? asT<T>(dynamic value) {
 class Api{
 
 
-  static Future<ApiResult<UserModel>> wechat_login(String openId){
+  static Future<ApiResult<UserModel>> wechat_login(String code){
     return ApiService.getInstance().post(ApiUrl.wechat_login,data:{
-          "openId":openId
+          "code":code
     },dataParser: (v){
       return UserModel.fromJson(v);
     });
   }
 
   static Future<ApiResult<List<BookList>>> book_list(String typeId){
-    return ApiService.getInstance().get(ApiUrl.book_list,queryParameters: {
-          'typeId':typeId},dataParser: (v){
+    return ApiService.getInstance().post(ApiUrl.book_list,data: {
+          'type':typeId},dataParser: (v){
       return _bookList(v);
     });
   }

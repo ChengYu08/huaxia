@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:huaxia/apps/book_store/book_details/test.dart';
 import 'package:huaxia/config/assets/imgs.dart';
 import 'package:huaxia/config/config.dart';
+import 'package:huaxia/widgets/book_cover.dart';
 import 'package:huaxia/widgets/drop_shadow_image.dart';
 
 import 'logic.dart';
@@ -54,22 +55,23 @@ class BookDetailsPage extends StatelessWidget {
             const SizedBox(
               height: 8,
             ),
-            AspectRatio(
-              aspectRatio: 16 / 9,
+            SizedBox(
+             width: 125,height: 170,
               child: DropShadowImage(
                   offset: Offset.zero,
                   scale: 1,
-                  blurRadius: 8,
+                  blurRadius: 5,
                   borderRadius: 3,
-                  image: Image.network(
-                      'https://img.newmediamax.com.tw/large/7f49bd584a6b4487a2c358893d6bc477')),
+                  image:  BookCover(title: "123",
+                    width: 120,height: 164,
+                  )),
             ),
             const SizedBox(
               height: 20,
             ),
             Text(
               '道德家',
-              style: Get.textTheme.displaySmall,
+              style: Get.textTheme.displaySmall!.copyWith(fontWeight: FontWeight.w500),
             ),
             const SizedBox(
               height: 7,

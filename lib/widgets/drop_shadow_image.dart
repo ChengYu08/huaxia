@@ -30,7 +30,7 @@ class DropShadowImage extends StatelessWidget {
   final double blurRadius;
 
   /// The required image to be used.
-  final Image image;
+  final Widget image;
 
   DropShadowImage({
     this.key,

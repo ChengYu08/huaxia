@@ -51,6 +51,11 @@ class LoginLogic extends GetxService {
         Get.log('======取消了登录==========');
         AppToast.toast('取消登录');
       }
+         if (_authResp?.errorCode == -4) {
+        Get.log('======取消了登录==========');
+        AppToast.toast('用户拒绝授权');
+      }
+
 
       handlerLogin();
       Get.log('登录:$content');
@@ -80,13 +85,7 @@ class LoginLogic extends GetxService {
 
   void handlerLogin() async {
     if (_authResp?.isSuccessful == true) {
-      final WechatAccessTokenResp accessTokenResp =
-          await WechatExtension.getAccessTokenUnionID(
-        appId: WeChatConfig.kAppId,
-        appSecret: WeChatConfig.kAppSecret,
-        code: _authResp!.code!,
-      );
-      Api.wechat_login(accessTokenResp.openid!).then((value) {
+      Api.wechat_login( _authResp!.code!).then((value) {
         if (value.success) {
           _saveUser(value.data!);
           _addUser(value.data!);
@@ -111,6 +110,7 @@ class LoginLogic extends GetxService {
   _addUser(UserModel userModel) {
     userStream.add(userModel);
     loginState.value = LoginState.authentication;
+    Get.log("addToken:${userModel.userToken}");
     ApiService.getInstance().addInterceptors(TokenInterceptor(userModel.userToken!));
   }
 

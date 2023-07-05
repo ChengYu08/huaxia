@@ -327,73 +327,72 @@ class _BookListWidgetState extends State<BookListWidget> {
   }
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return FutureBuilder<ApiResult<List<BookList>>>(
+    return FutureBuilder<ApiResult<List<BookList>>>(
         future: widget.rxMap[widget.controller.index],
         builder: (context, snapshot) {
-                if(snapshot.hasError){
-                  return  SliverToBoxAdapter(child: Text('${snapshot.error??''}'));
-                }
+          if(snapshot.hasError){
+            final ApiResult result = snapshot.error as ApiResult;
+            return  SliverToBoxAdapter(child: Text(result.message));
+          }
 
-              if(snapshot.hasData){
-               final listData= snapshot.data?.data??[];
+          if(snapshot.hasData){
+            final listData= snapshot.data?.data??[];
 
-          return SliverPrototypeExtentList(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                      final data = listData[index];
-                      return GestureDetector(
-                        onTap: () {
-                          Get.toNamed(Routers.bookDetailsPage);
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.only(bottom: 8),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 14),
-                          child: Row(
-                            children: [
-                              BookCover(title: '${data.name}',),
-                              const SizedBox(
-                                width: 16,
-                              ),
-                              Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        data.author??'--',
-                                        style: Get.textTheme.bodyMedium!
-                                            .copyWith(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const SizedBox(
-                                        height: 8,
-                                      ),
-                                      Expanded(
-                                          child: Text(
-                                            '${data.synopsis}',
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: Get.textTheme.labelLarge,
-                                          ))
-                                    ],
-                                  ))
-                            ],
+            return SliverPrototypeExtentList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final data = listData[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Get.toNamed(Routers.bookDetailsPage);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 14),
+                      child: Row(
+                        children: [
+                          BookCover(title: '${data.name}',),
+                          const SizedBox(
+                            width: 16,
                           ),
-                        ),
-                      );
-                    }, childCount: listData.length),
-                    prototypeItem: const SizedBox(
-                      width: double.infinity,
-                      height: 120,
-                    ));
-              }
-              return const SliverToBoxAdapter(child: CircularProgressIndicator());
+                          Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment
+                                    .start,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    data.author??'--',
+                                    style: Get.textTheme.bodyMedium!
+                                        .copyWith(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(
+                                    height: 8,
+                                  ),
+                                  Expanded(
+                                      child: Text(
+                                        '${data.synopsis}',
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Get.textTheme.labelLarge,
+                                      ))
+                                ],
+                              ))
+                        ],
+                      ),
+                    ),
+                  );
+                }, childCount: listData.length),
+                prototypeItem: const SizedBox(
+                  width: double.infinity,
+                  height: 120,
+                ));
+          }
+          return const SliverToBoxAdapter(child: Center(child: CircularProgressIndicator()));
 
         }
-      );
-    });
+    );
   }
 }
 

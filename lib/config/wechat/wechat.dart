@@ -5,7 +5,7 @@ import 'package:wechat_kit/wechat_kit.dart';
 class WeChatConfig{
   static const String kAppId = 'wxb34ed16241caa374';
   static const String kUniversalLink = '';
-  static const String kAppSecret = '921fbf789f4ecf1ca43f792ce6c7c4c8';
+  static const String kAppSecret = '892fc14c9e7d101950f1951331979582';
 
   static register(){
      WechatKitPlatform.instance.registerApp(

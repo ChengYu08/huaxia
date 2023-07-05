@@ -36,9 +36,18 @@ class BookStoreLogic extends GetxController {
     super.onInit();
   }
 
-  intBookList(int index){
+  intBookList(int index)async{
+    if(bookList.containsKey(index)){
+    final f =await  bookList[index];
+      if(f?.failed==true){
+        int typeId = index+1;
+        bookList[index]=Api.book_list('$typeId');
+      }
+    }
+
     if((!bookList.containsKey(index) )|| (bookList[index]==null)){
       int typeId = index+1;
+
         bookList[index]=Api.book_list('$typeId');
     }
   }

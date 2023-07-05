@@ -15,7 +15,7 @@ class TokenInterceptor extends Interceptor{
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    options.headers['x-access-token']=token;
+    options.headers['userToken']=token;
     options.headers['platform']=Platform.isAndroid?'Android':'ios';
     return handler.next(options);
   }
