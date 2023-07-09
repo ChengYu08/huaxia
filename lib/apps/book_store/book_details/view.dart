@@ -107,11 +107,11 @@ class BookDetailsPage extends StatelessWidget {
                               left: 24, top: 24, right: 24, bottom: 21),
                           child: Row(
                             children: [
-                              mue('目录', '7.2', 'w'),
+                              mue('目录', '${logic.book.catalogueNum}', '章节'),
                               const SizedBox(
                                 width: 16,
                               ),
-                              mue('全文', '81', '章节'),
+                              mue('全文', '${logic.book.sizeNum??0}', '字'),
                             ],
                           ),
                         ),
@@ -158,8 +158,7 @@ class BookDetailsPage extends StatelessWidget {
                                     height: 44,
                                     child: ElevatedButton(
                                         onPressed: () {
-                                          // Get.toNamed(Routers.bookReaderPage,arguments: logic.book);
-                                          Get.to(()=>Ebooks());
+                                          Get.toNamed(Routers.bookReaderPage,arguments: logic.book);
                                         },
                                         child: Text('阅读全文')),
                                   ))

@@ -3,15 +3,18 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:huaxia/apps/book_store/model/Catalogue.dart';
+import 'package:huaxia/apps/book_store/model/Chapters.dart';
 import 'package:huaxia/config/config.dart';
 import 'package:huaxia/widgets/custom_selectable_text/custom_selectable_text.dart';
 import 'package:screen_brightness/screen_brightness.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../model/BookList.dart';
 
 class BookReaderLogic extends GetxController {
   var showFistPop = true.obs;
   late List<CustomSelectableTextItem> customSelectableTextItems;
+
 // final PageController controller = PageController();
   var menuBarShow = false.obs;
   var menuBottomShow = false.obs;
@@ -20,23 +23,30 @@ class BookReaderLogic extends GetxController {
   var m2 = false.obs;
   var m3 = false.obs;
   var m4 = false.obs;
+
+  var translateText = 0.obs;
   late String data;
   late Future<double> brightness;
   List<List<String>> len = [];
-  late Future< List<List<String>>>  f;
+  late Future<List<List<String>>> f;
 
-  late  BookList book;
-  List<Catalogue> catalogues = [];
+  late BookList book;
+
+  RxList<Catalogue> catalogues = RxList([]);
+  RxMap<Catalogue, Future<ApiResult<Chapters>>> cc = RxMap();
+
+  final ItemScrollController itemScrollController = ItemScrollController();
+  final ScrollOffsetController scrollOffsetController = ScrollOffsetController();
+  final ItemPositionsListener itemPositionsListener = ItemPositionsListener
+      .create();
+  final ScrollOffsetListener scrollOffsetListener = ScrollOffsetListener
+      .create();
 
   @override
   void onInit() {
     book = Get.arguments as BookList;
     super.onInit();
-    Api.book_Catalogue(book.bookId!).then((value) {
-        if(value.success){
-          catalogues == value.data;
-        }
-    });
+    initBook();
     brightness = ScreenBrightness().system;
     data = '''
   \n　　子曰：“为政以德，譬如北辰，居其所而众星共之。”\n
@@ -48,8 +58,43 @@ class BookReaderLogic extends GetxController {
   ''';
 
     docVN = ValueNotifier(data);
+    itemPositionsListener.itemPositions.addListener(() {
 
+    });
     init();
+  }
+
+  void initBook() {
+    Api.book_Catalogue(book.bookId!).then((value) {
+      if (value.success) {
+        catalogues.value = value.data ?? [];
+        if (catalogues.first.bookCatalogueId != null) {
+          cc[catalogues.first] = Api.book_Chapters(bookId: book.bookId!,
+              chaptersId: catalogues.first.bookCatalogueId!);
+        }
+      } else {
+        AppToast.toast(value.message);
+        Get.back();
+      }
+    });
+  }
+
+  toCuttex(int index) {
+    getBook_Chapters(index);
+    itemScrollController.jumpTo(index: index);
+  }
+
+
+  Future<ApiResult<Chapters>>  getBook_Chapters(int index) {
+    final cl = catalogues[index];
+    if (cc.containsKey(cl) && cc[cl]!=null) {
+      return cc[cl]!;
+    } else {
+      final f = Api.book_Chapters(
+          bookId: book.bookId!, chaptersId: cl.bookCatalogueId!);
+      cc[cl] = f;
+      return f;
+    }
   }
 
   late ValueNotifier<String> docVN;
@@ -206,7 +251,6 @@ class BookReaderLogic extends GetxController {
     m3.value = false;
     m4.value = false;
   }
-
 
 
 }

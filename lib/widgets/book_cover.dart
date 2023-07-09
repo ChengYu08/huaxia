@@ -12,9 +12,14 @@ class BookCover extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final  textHeight = title.length*13.5+20;
+    var h = height;
+      if(height<textHeight){
+        h=textHeight;
+      }
     return Container(
       width: width,
-      height: height,
+      height: h,
       padding: const EdgeInsets.only(top: 4,left: 4),
       decoration: BoxDecoration(
         image: DecorationImage(image: AssetImage(Imgs.bg_book),fit: BoxFit.fill)

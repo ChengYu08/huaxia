@@ -32,13 +32,13 @@ class Api{
   }
 
   static Future<ApiResult<List<Catalogue>>> book_Catalogue(int id){
-    return ApiService.getInstance().post(ApiUrl.book_catalogue('$id'),dataParser: (v){
+    return ApiService.getInstance().get(ApiUrl.book_catalogue('$id'),dataParser: (v){
       return _bookCatalogue(v);
     });
   }
 
   static Future<ApiResult<Chapters>> book_Chapters({required int bookId,required int  chaptersId}){
-    return ApiService.getInstance().post(ApiUrl.chapters(bookId: bookId,chaptersId: chaptersId),dataParser: (v){
+    return ApiService.getInstance().get(ApiUrl.chapters(bookId: bookId,chaptersId: chaptersId),dataParser: (v){
       return Chapters.fromJson(v);
     });
   }
