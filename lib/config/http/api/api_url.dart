@@ -18,4 +18,12 @@ class ApiUrl{
 
   ///书城列表
   static const book_list='/guoxue/app/book/list';
+  ///书籍目录
+  static String book_catalogue(String id){
+    return '/guoxue/app/book/catalogue/$id/list';
+  }
+  ///书籍章节
+  static String chapters({required int bookId,required int  chaptersId}){
+    return '/guoxue/app/book/chapters/$bookId/$chaptersId';
+  }
 }

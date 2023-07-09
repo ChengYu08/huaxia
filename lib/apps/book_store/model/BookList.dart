@@ -20,6 +20,7 @@ class BookList {
     this.typeSecondId,
     this.catalogueNum,
     this.sizeNum,
+    this.isJoin,
     this.isDel,
     this.keyword,
   });
@@ -39,6 +40,7 @@ class BookList {
     typeSecondId: asT<String?>(json['typeSecondId']),
     catalogueNum: asT<int?>(json['catalogueNum']),
     sizeNum: asT<int?>(json['sizeNum']),
+    isJoin: asT<int?>(json['isJoin']),
     isDel: asT<bool?>(json['isDel']),
     keyword: asT<String?>(json['keyword']),
   );
@@ -57,6 +59,7 @@ class BookList {
   final String? typeSecondId;
   final int? catalogueNum;
   final int? sizeNum;
+  final int? isJoin;
   final bool? isDel;
   final String? keyword;
 
@@ -77,6 +80,7 @@ class BookList {
     'synopsis': synopsis,
     'author': author,
     'typeId': typeId,
+    'isJoin': isJoin,
     'typeSecondId': typeSecondId,
     'catalogueNum': catalogueNum,
     'sizeNum': sizeNum,

@@ -343,7 +343,7 @@ class _BookListWidgetState extends State<BookListWidget> {
                   final data = listData[index];
                   return GestureDetector(
                     onTap: () {
-                      Get.toNamed(Routers.bookDetailsPage);
+                      Get.toNamed(Routers.bookDetailsPage,arguments: data);
                     },
                     child: Container(
                       margin: const EdgeInsets.only(bottom: 8),

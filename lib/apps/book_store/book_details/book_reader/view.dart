@@ -7,7 +7,7 @@ import 'package:huaxia/apps/book_store/book_details/book_reader/ui/book_bottom_m
 import 'package:huaxia/apps/book_store/book_details/book_reader/ui/book_screen_brightness.dart';
 import 'package:huaxia/apps/book_store/book_details/book_reader/ui/book_text_style_menu.dart';
 import 'package:huaxia/apps/book_store/book_details/book_reader/ui/introduce_menu.dart';
-import 'package:huaxia/widgets/custom_selectable_text/custom_selectable_text.dart';
+
 import 'package:huaxia/widgets/flutter_html/flutter_html.dart';
 import 'logic.dart';
 
