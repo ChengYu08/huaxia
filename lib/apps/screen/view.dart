@@ -22,9 +22,9 @@ class _ScreenPageState extends State<ScreenPage> {
   login.loginState.addListener(() {
 
     if( login.loginState.value == LoginState.authentication){
-      Get.offAndToNamed(Routers.home);
+      Get.offAllNamed(Routers.home);
     }else{
-      Get.offAndToNamed(Routers.login);
+      Get.offAllNamed(Routers.login);
     }
   });
 

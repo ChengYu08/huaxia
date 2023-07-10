@@ -92,7 +92,7 @@ class LoginLogic extends GetxService {
         if (value.success) {
           _saveUser(value.data!);
           _addUser(value.data!);
-          Get.offAndToNamed(Routers.home);
+          Get.offAllNamed(Routers.home);
         } else {
           AppToast.toast(value.message);
         }

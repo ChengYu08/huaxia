@@ -168,7 +168,7 @@ class ApiService {
                 },
                 textConfirm: '确定',
                 onConfirm: (){
-                  getx.Get.offAndToNamed(Routers.login);
+                  getx.Get.offAllNamed(Routers.login);
                 },
 
               );
