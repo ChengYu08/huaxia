@@ -168,7 +168,7 @@ class BookDetailsPage extends StatelessWidget {
                                             onPressed: () {
                                               Get.toNamed(
                                                   Routers.bookReaderPage,
-                                                  arguments: logic.book);
+                                                  arguments: logic.book.value);
                                             },
                                             child: Text('阅读全文')),
                                       ))
