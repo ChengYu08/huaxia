@@ -5,7 +5,9 @@ import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart' as getx;
 import 'package:get/get_utils/get_utils.dart';
+import 'package:huaxia/config/config.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'api/api_url.dart';
@@ -130,7 +132,7 @@ class ApiService {
     Map<String, String>? header,
     DataParser<T>? dataParser,
     bool skipLock = false,
-
+        CachePolicy cachePolicy =  CachePolicy.noCache
   }) async {
     if (!skipLock && isLocked) {
 
@@ -142,11 +144,11 @@ class ApiService {
     Options options = Options(
       method: method,
       headers: header,
-      contentType: Headers.jsonContentType,
       sendTimeout: sendTimeout.milliseconds,
       receiveTimeout: receiveTimeout.milliseconds,
     );
-
+    cacheOptions.copyWith(policy: cachePolicy);
+    options.copyWith(extra: cacheOptions.toExtra());
     try {
       Response<Json> res = await _dio.request(
         src,
@@ -157,6 +159,21 @@ class ApiService {
 
       final result = ApiResult<T>.fromResponse(res, dataParser: dataParser);
         if(result.failed){
+            if(result.status==502){
+              getx.Get.defaultDialog(title: '登录状态已过期',
+                barrierDismissible: false,
+                middleText: '去登录',
+                onWillPop: ()async{
+                    return false;
+                },
+                textConfirm: '确定',
+                onConfirm: (){
+                  getx.Get.offAndToNamed(Routers.login);
+                },
+
+              );
+            }
+
           return Future.error(result);
         }else{
           return result;
@@ -176,7 +193,7 @@ class ApiService {
     Map<String, String>? header,
     DataParser<T>? dataParser,
     bool skipLock = false,
-
+        CachePolicy cachePolicy =  CachePolicy.noCache
   }) async {
     return request(
       src,
@@ -184,6 +201,7 @@ class ApiService {
       header: header,
       queryParameters: queryParameters,
       dataParser: dataParser,
+      cachePolicy: cachePolicy,
       skipLock: skipLock,
 
     );
@@ -278,7 +296,7 @@ class ApiResult<T> {
   ApiResult.fromResponse(
     Response<Json> response, {
     DataParser<T>? dataParser,
-  })  : status = response.data?['code'] ?? -1,
+  })  : status = response.data?['code'] ?? response.data?['status']??-1,
         message = response.data?['msg'] ?? '',
         total = response.data?['total'] ?? 0,
         data = response.data?['data'] != null

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:huaxia/apps/book_store/logic.dart';
 import 'package:huaxia/apps/home/logic.dart';
+import 'package:huaxia/apps/login/logic.dart';
+import 'package:huaxia/apps/login/model/user_model.dart';
 import 'package:huaxia/config/config.dart';
 import 'package:huaxia/widgets/persistent_header_builder.dart';
 
@@ -9,6 +11,7 @@ import 'logic.dart';
 
 class MePage extends StatelessWidget {
   final logic = Get.find<MeLogic>();
+  final loginIc = Get.find<LoginLogic>();
 
   @override
   Widget build(BuildContext context) {
@@ -34,26 +37,55 @@ class MePage extends StatelessWidget {
                         image: AssetImage(Imgs.ic_me_bg),
                         fit: BoxFit.fitWidth,
                         alignment: Alignment.topCenter)),
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      height: kToolbarHeight + 32,
-                    ),
-                    ImgNet.net(
-                        'https://img2.baidu.com/it/u=2055715645,3308680961&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750',
-                        boxShape: BoxShape.circle,
-                        width: 80,
-                        height: 80,
-                        fit: BoxFit.cover),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Text(
-                      '登录/注册',
-                      style: Get.textTheme.displaySmall!
-                          .copyWith(fontWeight: FontWeight.w600),
-                    )
-                  ],
+                child: StreamBuilder<UserModel>(
+                  stream: loginIc.userStream,
+                  initialData: loginIc.initUserModel,
+                  builder: (context, snapshot) {
+
+                    return Column(
+                      children: [
+                        const SizedBox(
+                          height: kToolbarHeight + 32,
+                        ),
+                        if(snapshot.data?.user?.avatar!=null)
+                        ImgNet.net(
+                            '${snapshot.data?.user?.avatar}',
+                            boxShape: BoxShape.circle,
+                            width: 80,
+                            height: 80,
+                            fit: BoxFit.cover)else
+                            CircleAvatar(
+                              backgroundColor:Get.theme.primaryColor,
+                                maxRadius: 40,
+                            ),
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        ValueListenableBuilder(
+                          valueListenable: loginIc.loginState,
+                          builder: (BuildContext context, LoginState value, Widget? child) {
+                              if(value ==LoginState.authentication){
+                                return Text(
+                                  snapshot.data?.user?.nickName??'',
+                                  style: Get.textTheme.displaySmall!
+                                      .copyWith(fontWeight: FontWeight.w600),
+                                );
+                              }
+                            return Text(
+                              '登录/注册',
+                              style: Get.textTheme.displaySmall!
+                                  .copyWith(fontWeight: FontWeight.w600),
+                            );
+                          },
+                          child: Text(
+                            '登录/注册',
+                            style: Get.textTheme.displaySmall!
+                                .copyWith(fontWeight: FontWeight.w600),
+                          ),
+                        )
+                      ],
+                    );
+                  }
                 ),
               ),
             ),

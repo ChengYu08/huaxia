@@ -20,7 +20,7 @@ class _ScreenPageState extends State<ScreenPage> {
 @override
   void initState() {
   login.loginState.addListener(() {
-    Get.log('===isCompose==');
+
     if( login.loginState.value == LoginState.authentication){
       Get.offAndToNamed(Routers.home);
     }else{

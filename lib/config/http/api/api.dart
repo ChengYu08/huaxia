@@ -1,9 +1,9 @@
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:huaxia/apps/book_store/model/BookList.dart';
 import 'package:huaxia/apps/book_store/model/Catalogue.dart';
 import 'package:huaxia/apps/book_store/model/Chapters.dart';
 import 'package:huaxia/apps/login/model/user_model.dart';
 import 'package:huaxia/config/http/api/api_url.dart';
-
 import '../api_service.dart';
 
 T? asT<T>(dynamic value) {
@@ -23,6 +23,11 @@ class Api{
       return UserModel.fromJson(v);
     });
   }
+  static Future<ApiResult> book_shelf_add(String bookId){
+    return ApiService.getInstance().post(ApiUrl.book_shelf_add,data:{
+          "bookId":bookId
+    });
+  }
 
   static Future<ApiResult<List<BookList>>> book_list(String typeId){
     return ApiService.getInstance().post(ApiUrl.book_list,data: {
@@ -32,13 +37,13 @@ class Api{
   }
 
   static Future<ApiResult<List<Catalogue>>> book_Catalogue(int id){
-    return ApiService.getInstance().get(ApiUrl.book_catalogue('$id'),dataParser: (v){
+    return ApiService.getInstance().get(ApiUrl.book_catalogue('$id',),cachePolicy: CachePolicy.refresh,dataParser: (v){
       return _bookCatalogue(v);
     });
   }
 
   static Future<ApiResult<Chapters>> book_Chapters({required int bookId,required int  chaptersId}){
-    return ApiService.getInstance().get(ApiUrl.chapters(bookId: bookId,chaptersId: chaptersId),dataParser: (v){
+    return ApiService.getInstance().get(ApiUrl.chapters(bookId: bookId,chaptersId: chaptersId),cachePolicy: CachePolicy.refresh,dataParser: (v){
       return Chapters.fromJson(v);
     });
   }

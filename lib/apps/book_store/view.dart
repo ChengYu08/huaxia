@@ -8,6 +8,7 @@ import 'package:huaxia/config/config.dart';
 import 'package:huaxia/widgets/book_cover.dart';
 import 'book_flex_space_bar.dart';
 import 'logic.dart';
+import 'package:html/parser.dart' as htmlparser;
 
 class BookStorePage extends StatefulWidget {
   @override
@@ -368,11 +369,11 @@ class _BookListWidgetState extends State<BookListWidget> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   const SizedBox(
-                                    height: 8,
+                                    height: 3,
                                   ),
                                   Expanded(
                                       child: Text(
-                                        '${data.synopsis}',
+                                        '${htmlparser.parse(data.synopsis).body?.text}',
                                         maxLines: 3,
                                         overflow: TextOverflow.ellipsis,
                                         style: Get.textTheme.labelLarge,

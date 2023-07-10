@@ -16,6 +16,7 @@ class ImgNet{
       fit: fit,
       cache: true,
       shape: boxShape,
+      printError: true,
       loadStateChanged: (ExtendedImageState state) {
         switch (state.extendedImageLoadState) {
           case LoadState.loading:

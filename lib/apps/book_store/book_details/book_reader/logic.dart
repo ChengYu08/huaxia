@@ -30,7 +30,7 @@ class BookReaderLogic extends GetxController {
   List<List<String>> len = [];
   late Future<List<List<String>>> f;
 
-  late BookList book;
+  var  book = BookList().obs;
 
   RxList<Catalogue> catalogues = RxList([]);
   RxMap<Catalogue, Future<ApiResult<Chapters>>> cc = RxMap();
@@ -44,7 +44,7 @@ class BookReaderLogic extends GetxController {
 
   @override
   void onInit() {
-    book = Get.arguments as BookList;
+    book.value = Get.arguments as BookList;
     super.onInit();
     initBook();
     brightness = ScreenBrightness().system;
@@ -65,11 +65,11 @@ class BookReaderLogic extends GetxController {
   }
 
   void initBook() {
-    Api.book_Catalogue(book.bookId!).then((value) {
+    Api.book_Catalogue(book.value.bookId!).then((value) {
       if (value.success) {
         catalogues.value = value.data ?? [];
         if (catalogues.first.bookCatalogueId != null) {
-          cc[catalogues.first] = Api.book_Chapters(bookId: book.bookId!,
+          cc[catalogues.first] = Api.book_Chapters(bookId: book.value.bookId!,
               chaptersId: catalogues.first.bookCatalogueId!);
         }
       } else {
@@ -91,12 +91,29 @@ class BookReaderLogic extends GetxController {
       return cc[cl]!;
     } else {
       final f = Api.book_Chapters(
-          bookId: book.bookId!, chaptersId: cl.bookCatalogueId!);
+          bookId: book.value.bookId!, chaptersId: cl.bookCatalogueId!);
       cc[cl] = f;
       return f;
     }
   }
 
+  void addBook() {
+    final c=AppLoading.loading();
+    Api.book_shelf_add('${book.value.bookId}').then((value){
+      c();
+      if(value.success){
+        AppToast.toast('加入成功');
+        book.update((val) {
+          val?.isJoin = 1;
+        });
+      }else{
+        AppToast.toast(value.message);
+      }
+    }).catchError((e){
+
+      c();
+    });
+  }
   late ValueNotifier<String> docVN;
 
   init() {

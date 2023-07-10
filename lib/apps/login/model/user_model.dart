@@ -24,6 +24,7 @@ class UserModel {
   );
   @HiveField(0)
   final String? userToken;
+  @HiveField(1)
   final User? user;
 
   factory UserModel.un(){

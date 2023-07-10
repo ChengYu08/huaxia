@@ -33,7 +33,7 @@ class BookMenu extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  BookCover(title: '${logic.book.name}',
+                  BookCover(title: '${logic.book.value.name}',
                     width: 68,
                     height: 68,
                   ),
@@ -46,7 +46,7 @@ class BookMenu extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${logic.book.name}',
+                          '${logic.book.value.name}',
                           style: Get.textTheme.headlineMedium!
                               .copyWith(fontWeight: FontWeight.w500),
                         ),

@@ -25,11 +25,14 @@ class LoginLogic extends GetxService {
 
   late Box<UserModel> userBox;
 
-  final StreamController<UserModel> userStream = StreamController.broadcast();
+  final StreamController<UserModel> _userStream = StreamController.broadcast();
   final ValueNotifier<LoginState> loginState= ValueNotifier(LoginState.unknown);
+
+   Stream<UserModel> get  userStream=>_userStream.stream;
+  UserModel? get  initUserModel =>userBox.get(loginBox);
   @override
   void onInit() {
-    userStream.add(UserModel.un());
+    _userStream.add(UserModel.un());
     initBox();
     _respSubs = WechatKitPlatform.instance.respStream().listen(_listenResp);
     super.onInit();
@@ -99,30 +102,31 @@ class LoginLogic extends GetxService {
 
   void initBox() async {
     userBox = await Hive.openBox(loginHive);
-    final user = userBox.get(loginBox);
-    if (user != null) {
-      _addUser(user);
+
+    if (initUserModel != null) {
+      Get.log("用户信息：$initUserModel");
+      _addUser(initUserModel!);
     }else{
       loginState.value = LoginState.notAuthenticated;
     }
   }
 
   _addUser(UserModel userModel) {
-    userStream.add(userModel);
+    _userStream.sink.add(userModel);
     loginState.value = LoginState.authentication;
-    Get.log("addToken:${userModel.userToken}");
     ApiService.getInstance().addInterceptors(TokenInterceptor(userModel.userToken!));
   }
 
   _saveUser(UserModel userModel) {
-    userStream.add(userModel);
+    _userStream.add(userModel);
     userBox.put(loginBox, userModel);
   }
 
   cleanUser() {
     userBox.delete(loginBox);
     loginState.value = LoginState.notAuthenticated;
-    userStream.add(UserModel.un());
+    _userStream.add(UserModel.un());
+
   }
 }
 

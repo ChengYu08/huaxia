@@ -26,4 +26,9 @@ class ApiUrl{
   static String chapters({required int bookId,required int  chaptersId}){
     return '/guoxue/app/book/chapters/$bookId/$chaptersId';
   }
+
+  ///我的书架
+  static const  book_shelf= '/guoxue/app/book/shelf/list';
+  ///加入书架
+  static const  book_shelf_add= '/guoxue/app/book/shelf/add';
 }

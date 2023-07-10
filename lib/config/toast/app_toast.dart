@@ -13,3 +13,35 @@ class AppToast{
     );
   }
 }
+class AppLoading{
+    static loading({
+      WrapAnimation? wrapToastAnimation,
+      Alignment align = Alignment.center,
+      BackButtonBehavior? backButtonBehavior,
+      bool crossPage = true,
+      bool clickClose = false,
+      bool allowClick = false,
+      bool enableKeyboardSafeArea = true,
+      VoidCallback? onClose,
+      Duration? duration,
+      Duration? animationDuration,
+      Duration? animationReverseDuration,
+      Color backgroundColor = Colors.black26,
+    }){
+      return  BotToast.showLoading(
+        wrapAnimation: wrapToastAnimation,
+        align: Alignment.center,
+        backButtonBehavior: backButtonBehavior,
+        crossPage: crossPage,
+        clickClose: clickClose,
+        allowClick:  allowClick,
+        enableKeyboardSafeArea: enableKeyboardSafeArea,
+        onClose: onClose,
+        duration: duration,
+        animationDuration: animationDuration,
+        animationReverseDuration: animationDuration,
+        backgroundColor: backgroundColor
+      );
+
+    }
+}

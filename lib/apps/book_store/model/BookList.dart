@@ -5,7 +5,7 @@ import 'package:huaxia/config/http/api/api.dart';
 
 
 class BookList {
-  const BookList({
+   BookList({
     this.createBy,
     this.createTime,
     this.updateBy,
@@ -59,7 +59,7 @@ class BookList {
   final String? typeSecondId;
   final int? catalogueNum;
   final int? sizeNum;
-  final int? isJoin;
+   int? isJoin;
   final bool? isDel;
   final String? keyword;
 
