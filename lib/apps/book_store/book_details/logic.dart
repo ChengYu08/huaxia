@@ -24,7 +24,7 @@ class BookDetailsLogic extends GetxController {
         AppToast.toast(value.message);
       }
     }).catchError((e){
-
+      AppToast.toast(e.message);
       c();
     });
   }

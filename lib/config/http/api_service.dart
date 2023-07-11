@@ -18,7 +18,7 @@ typedef DataParser<T> = T Function(dynamic);
 
 typedef Json = Map<String, dynamic>;
 
-const int connectTimeout = 5000;
+const int connectTimeout = 10000;
 const int sendTimeout = 10000;
 const int receiveTimeout = 5000;
 class ApiService {

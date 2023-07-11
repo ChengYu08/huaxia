@@ -20,7 +20,6 @@ class BookDetailsPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Get.theme.scaffoldBackgroundColor,
         actions: [
-
             Obx(() {
               if(logic.book.value.isJoin == 0){
                 return TextButton.icon(
@@ -145,7 +144,7 @@ class BookDetailsPage extends StatelessWidget {
                                       height: 44,
                                       child: OutlinedButton.icon(
                                           onPressed: () {
-                                            Get.to(() => Test());
+                                            Get.toNamed(Routers.bookSpeakPage,arguments: logic.book.value);
                                           },
                                           icon: Image.asset(
                                             Imgs.ic_earphone,

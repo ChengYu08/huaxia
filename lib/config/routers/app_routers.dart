@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:huaxia/apps/book_store/binding.dart';
 import 'package:huaxia/apps/book_store/book_details/book_reader/binding.dart';
 import 'package:huaxia/apps/book_store/book_details/book_reader/view.dart';
+import 'package:huaxia/apps/book_store/book_details/book_speak/binding.dart';
+import 'package:huaxia/apps/book_store/book_details/book_speak/view.dart';
 import 'package:huaxia/apps/book_store/book_search/view.dart';
 import 'package:huaxia/apps/home/view.dart';
 import 'package:huaxia/apps/home_sentence/binding.dart';
@@ -41,6 +43,7 @@ class Routers{
   static const addSentencePage = '/HomeSentencePage/AddSentencePage';
 
   static const me = '/MePage';
+  static const bookSpeakPage = '/BookSpeakPage';
   static const sentencePage = '/MePage/SentencePage';
 }
 class AppRouters{
@@ -70,6 +73,10 @@ class AppRouters{
         name: Routers.home_sentencePage,
         page: ()=>HomeSentencePage(),
         binding: HomeSentenceBinding()),
+    GetPage(
+        name: Routers.bookSpeakPage,
+        page: ()=>BookSpeakPage(),
+        binding: BookSpeakBinding()),
     GetPage(
         name: Routers.addSentencePage,
         page: ()=>AddSentencePage(),

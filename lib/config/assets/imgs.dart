@@ -64,6 +64,12 @@ class Imgs{
 
   static final String bg_start =getPath('bg_start');
   static final String bg_start_text =getPath('bg_start_text');
+  static final String ic_speed =getPath('ic_speed');
+  static final String ic_time =getPath('ic_time');
+  static final String ic_book =getPath('ic_book');
+  static final String ic_previous =getPath('ic_previous');
+  static final String ic_play =getPath('ic_play');
+  static final String ic_pause =getPath('ic_pause');
 
 
 
