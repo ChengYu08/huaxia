@@ -18,6 +18,8 @@ class TTSApp extends GetxService {
 
   ///音调
   final ValueNotifier<double> pitch = ValueNotifier(0.5);
+
+
   double minRate = 0.0;
   double maxRate =2.0;
   @override
@@ -29,10 +31,28 @@ class TTSApp extends GetxService {
   initTts() {
     flutterTts = FlutterTts();
     flutterTts.setLanguage('zh-CN');
+    flutterTts.setSpeechRate(rate.value);
     _setAwaitOptions();
+    if (GetPlatform.isAndroid) {
+      _getDefaultEngine();
+      flutterTts.setQueueMode(1);
+
+    }
+
+    if (GetPlatform.isAndroid) {
+      flutterTts.setInitHandler(() {
+        Get.log('==Android初始化完成==');
+        flutterTts.getEngines.then((value) {
+          if(value is List){
+            value.forEach((element) {
+              Get.log('=getEngines==$element');
+            });
+          }
+        });
+      });
+    }
     /// iOS only
     if(GetPlatform.isIOS){
-
        flutterTts.setSharedInstance(true);
        flutterTts.setIosAudioCategory(IosTextToSpeechAudioCategory.ambient, [
          IosTextToSpeechAudioCategoryOptions.allowBluetooth,
@@ -40,25 +60,13 @@ class TTSApp extends GetxService {
          IosTextToSpeechAudioCategoryOptions.mixWithOthers
        ]);
     }
-    if(GetPlatform.isAndroid){
-      flutterTts.setQueueMode(1);
-    }
+
 
     flutterTts.setStartHandler(() {
       Get.log('==TTS开始播放==');
       ttsState.value = TtsState.playing;
     });
 
-    if (GetPlatform.isAndroid) {
-      flutterTts.setInitHandler(() {
-        Get.log('==Android初始化完成==');
-      });
-    }
-
-    flutterTts.setCompletionHandler(() {
-      Get.log('==TTS播放完成==');
-      ttsState.value = TtsState.stopped;
-    });
 
     flutterTts.setCancelHandler(() {
       Get.log('==TTS当前播放已取消==');
@@ -83,11 +91,18 @@ class TTSApp extends GetxService {
       Get.log("text:$text==start:$start==end:$end==word:$word");
     });
     flutterTts.getSpeechRateValidRange.then((value) {
-      rate.value = value.normal;
       minRate = value.min;
       maxRate = value.max;
     });
   }
+  Future _getDefaultEngine() async {
+    var engine = await flutterTts.getDefaultEngine;
+    if (engine != null) {
+      await flutterTts.setEngine(engine);
+      Get.log('_getDefaultEngine:$engine');
+    }
+  }
+
 
   Future setVolume() {
     return flutterTts.setVolume(volume.value);
