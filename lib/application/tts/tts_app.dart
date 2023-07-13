@@ -3,8 +3,10 @@ import 'package:flutter_tts/flutter_tts.dart';
 
 import 'package:get/get.dart';
 
-enum TtsState { playing, stopped, paused, continued }
+enum TtsState { playing, stopped, paused, continued ,down}
 
+typedef  CurrentCallback = void Function(int index,String speakText);
+typedef  DownCallback = void Function();
 class TTSApp extends GetxService {
   late FlutterTts flutterTts;
 
@@ -19,23 +21,36 @@ class TTSApp extends GetxService {
   ///音调
   final ValueNotifier<double> pitch = ValueNotifier(0.5);
 
-
+  final ValueNotifier<int> currentIndex = ValueNotifier(0);
+  CurrentCallback? currentCallback;
+  DownCallback? downCallback;
+    List<String> playList = [];
   double minRate = 0.0;
   double maxRate =2.0;
+
+  String? get currentPlayText{
+      if(playList.isNotEmpty){
+        return playList[currentIndex.value];
+      }else{
+        return null;
+      }
+
+  }
   @override
   void onInit() {
     initTts();
     super.onInit();
   }
 
-  initTts() {
+  initTts() async{
     flutterTts = FlutterTts();
-    flutterTts.setLanguage('zh-CN');
-    flutterTts.setSpeechRate(rate.value);
+   await flutterTts.setLanguage('zh-CN');
+   await flutterTts.setSpeechRate(rate.value);
+   await flutterTts.setPitch(pitch.value);
     _setAwaitOptions();
     if (GetPlatform.isAndroid) {
       _getDefaultEngine();
-      flutterTts.setQueueMode(1);
+    await  flutterTts.setQueueMode(1);
 
     }
 
@@ -66,7 +81,34 @@ class TTSApp extends GetxService {
       Get.log('==TTS开始播放==');
       ttsState.value = TtsState.playing;
     });
+    ///当前一段播放完成
+    flutterTts.setCompletionHandler(() {
+      ///如果播放列表里面还有剩余的播放item则继续播放
+      if(playList.isNotEmpty){
+        currentIndex.value+=1;
+        ///已经播放到最后一条告知已经播放完成
+        ///清空当前播放列表和更新index
+        if(currentIndex.value==playList.length){
+          downCallback?.call();
+          playList.clear();
+          currentIndex.value = 0;
+          ttsState.value= TtsState.down;
+          ///当前播放的列表继续下跳正常播放
+        }else  if(currentIndex.value<playList.length){
+          ttsState.value= TtsState.continued;
+           speak();
+          currentCallback?.call( currentIndex.value, playList[currentIndex.value]);
 
+        }
+        ///当前已经全部播放完成
+      }else{
+        downCallback?.call();
+        playList.clear();
+        currentIndex.value = 0;
+        ttsState.value= TtsState.down;
+      }
+
+    });
 
     flutterTts.setCancelHandler(() {
       Get.log('==TTS当前播放已取消==');
@@ -95,14 +137,29 @@ class TTSApp extends GetxService {
       maxRate = value.max;
     });
   }
+
+  void setCurrentCallback(CurrentCallback callback) {
+    currentCallback = callback;
+  }
+  void setDownCallback(DownCallback callback) {
+    downCallback = callback;
+  }
+
+
   Future _getDefaultEngine() async {
     var engine = await flutterTts.getDefaultEngine;
     if (engine != null) {
       await flutterTts.setEngine(engine);
       Get.log('_getDefaultEngine:$engine');
     }
-  }
+    var e = await flutterTts.getEngines;
+    Get.log('=getEngines=$e');
+    var v = await flutterTts.getVoices;
+    Get.log('=getVoices=$v');
+    var s = await flutterTts.getDefaultVoice;
+    Get.log('=getDefaultVoice=$s');
 
+  }
 
   Future setVolume() {
     return flutterTts.setVolume(volume.value);
@@ -116,12 +173,19 @@ class TTSApp extends GetxService {
   Future setPitch() {
     return flutterTts.setPitch(pitch.value);
   }
-
-  Future speak(String speak) {
-    return flutterTts.speak(speak).then((value) {
-      ttsState.value = TtsState.playing;
-      return value;
-    });
+  cleanPlayList(){
+    playList.clear();
+    currentIndex.value = 0;
+  }
+  Future<dynamic> speak()async {
+    if(playList.isNotEmpty){
+      return flutterTts.speak(playList[currentIndex.value]).then((value) {
+        ttsState.value = TtsState.playing;
+        return value;
+      });
+    }else{
+      return -1;
+    }
 
   }
 
@@ -130,8 +194,8 @@ class TTSApp extends GetxService {
   }
 
   Future stop() async {
+    cleanPlayList();
     var result = await flutterTts.stop();
-
     if (result == 1) {
       ttsState.value = TtsState.stopped;
     }

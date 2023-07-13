@@ -7,6 +7,7 @@ import 'package:huaxia/apps/book_store/model/Catalogue.dart';
 import 'package:huaxia/apps/book_store/model/Chapters.dart';
 import 'package:huaxia/config/config.dart';
 import 'package:html/parser.dart' as htmlparser;
+import 'package:html/dom.dart' as dom;
 import 'package:slide_countdown/slide_countdown.dart';
 
 enum LoadingState { suc, loading, error }
@@ -15,22 +16,25 @@ class BookSpeakLogic extends GetxController {
   var book = BookList().obs;
   RxList<Catalogue> catalogues = RxList([]);
   final ValueNotifier<LoadingState> state = ValueNotifier(LoadingState.loading);
-  final Map<int, String> speakMap = {};
+  RxMap<int, List<dom.Element>> speakMap = RxMap({});
   var index = 0.obs;
   late Future book_Catalogue;
   late TTSApp ttsApp;
   late final StreamDuration streamDuration;
   final ValueNotifier<int> timeIndex = ValueNotifier(0);
+  var showBookText = false.obs;
+  final ScrollController controller = ScrollController();
   @override
   void onInit() {
     initTTS();
     book.value = Get.arguments as BookList;
+
     streamDuration = StreamDuration(
       30.minutes,
       autoPlay: false,
       onDone: (){
-
         ttsApp.stop();
+        ttsApp.cleanPlayList();
         timeIndex.value =0;
       }
     );
@@ -41,8 +45,17 @@ class BookSpeakLogic extends GetxController {
 
   void initTTS() {
     ttsApp = Get.find<TTSApp>();
-    ttsApp.flutterTts.setCompletionHandler(() {
+    ttsApp.setDownCallback(() {
       next();
+    });
+    ttsApp.setCurrentCallback((int index, String speakText) {
+        Get.log('=当前播放index:$index==speakText:$speakText');
+        if(controller.position.haveDimensions) {
+          double max =  controller.position.maxScrollExtent/ttsApp.playList.length;
+          controller.jumpTo(1);
+          controller.animateTo(max*index, duration: 400.milliseconds, curve: Curves.linear);
+        }
+
     });
   }
 
@@ -304,24 +317,25 @@ class BookSpeakLogic extends GetxController {
     });
   }
 
-  String _asyncMap(String text) {
-    final String speakText = htmlparser.parse(text).body?.text ?? '';
-    speakMap[index.value] = speakText;
-    return speakText;
+  List<dom.Element> _asyncMap(String text) {
+    final  speakText = htmlparser.parse(text).body;
+    speakMap[index.value] = speakText?.children??[];
+    return speakText?.children??[];
   }
 
   previous() {
     if (index.value > 0) {
       index--;
+      ttsApp.cleanPlayList();
       play();
     } else {
       AppToast.toast('当前已经是第一页');
     }
   }
-
   next() {
     if (index < catalogues.length) {
       index++;
+      ttsApp.cleanPlayList();
       play();
     } else {
       AppToast.toast('当前已经是最后一页');
@@ -337,52 +351,48 @@ class BookSpeakLogic extends GetxController {
       state.value = LoadingState.error;
     }
   }
+  Future<List<dom.Element>> spText()async{
+    try{
+      if (speakMap.containsKey(index.value)) {
+        final  speak = speakMap[index.value];
+        if (speak != null && speak.isNotEmpty) {
+          return speak;
+        } else {
+          final data =await getCatalogues();
+          if(data.success){
+            final  speakText = _asyncMap(data.data?.cont ?? '');
+            return speakText;
+          }else{
+            return [];
+          }
+        }
+      } else {
+        final data = await getCatalogues();
+        if(data.success){
+          final  speakText = _asyncMap(data.data?.cont ?? '');
+          return speakText;
+        }else{
+          return [];
+        }
+      }
+    }catch(e){
+      return [];
+    }
 
+  }
   play() async {
     state.value = LoadingState.loading;
-    if (speakMap.containsKey(index.value)) {
-      final String? speak = speakMap[index.value];
-      if (speak != null) {
-        Get.log("===$speak");
-        ttsApp.speak(speak).then((value) {
-          if (value == 1) {
-            state.value = LoadingState.suc;
-          } else {
-            state.value = LoadingState.error;
-          }
-        });
-      } else {
-        final data = getCatalogues();
-        data.then((value) {
-          final String speakText = _asyncMap(value.data?.cont ?? '');
-          ttsApp.speak(speakText).then((value) {
-            if (value == 1) {
-              state.value = LoadingState.suc;
-            } else {
-              state.value = LoadingState.error;
-            }
-          });
-        }).catchError((e) {
-          state.value = LoadingState.error;
-          AppToast.toast('${e.message}');
-        });
+    final speakText =await spText().catchError((e){
+      state.value = LoadingState.error;
+      AppToast.toast('${e.message}');
+    });
+      if(speakText.isNotEmpty){
+        state.value = LoadingState.suc;
+        ttsApp.playList = speakText.map((e) => e.text).toList();
+        await ttsApp.speak();
+      }else{
+        state.value = LoadingState.suc;
       }
-    } else {
-      final data = getCatalogues();
-      data.then((value) {
-        final String speakText = _asyncMap(value.data?.cont ?? '');
-        ttsApp.speak(speakText).then((value) {
-          if (value == 1) {
-            state.value = LoadingState.suc;
-          } else {
-            state.value = LoadingState.error;
-          }
-        });
-      }).catchError((e) {
-        AppToast.toast('${e.message}');
-        AppToast.toast('播放失败');
-      });
-    }
   }
 
   Future<ApiResult<Chapters>> getCatalogues() {
@@ -391,4 +401,6 @@ class BookSpeakLogic extends GetxController {
         chaptersId: catalogues[index.value].bookCatalogueId!);
     return data;
   }
+
+
 }
