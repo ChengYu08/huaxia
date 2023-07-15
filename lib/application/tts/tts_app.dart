@@ -1,7 +1,11 @@
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 import 'package:get/get.dart';
+import 'package:huaxia/apps/book_store/book_details/book_speak/view.dart';
+import 'package:huaxia/apps/book_store/model/BookList.dart';
 
 enum TtsState { playing, stopped, paused, continued ,down}
 
@@ -34,13 +38,32 @@ class TTSApp extends GetxService {
       }else{
         return null;
       }
-
   }
+   OverlayEntry? _entry;
+  final ValueNotifier<bool> showBookSpeak = ValueNotifier(false);
+  var showPages = true.obs;
   @override
   void onInit() {
     initTts();
     super.onInit();
   }
+  showSpeak(BookList bookList,{required BuildContext context,int? index}){
+    showPages.value = true;
+    _entry = OverlayEntry(builder: (context){
+      return BookSpeakPage(bookList: bookList,index: index,key: ValueKey('${bookList.bookId}'),);
+    },opaque: false,);
+    Overlay.of(context).insert(_entry!);
+    showBookSpeak.value =true;
+  }
+  remove(){
+    if(_entry!=null){
+      showPages.value= false;
+      showBookSpeak.value =false;
+      flutterTts.stop();
+      _entry!.remove();
+    }
+  }
+
 
   initTts() async{
     flutterTts = FlutterTts();

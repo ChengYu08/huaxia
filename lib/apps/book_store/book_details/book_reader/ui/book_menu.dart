@@ -33,7 +33,7 @@ class BookMenu extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  BookCover(title: '${logic.book.value.name}',
+                  BookCover(title: logic.title,
                     width: 68,
                     height: 68,
                   ),
@@ -46,7 +46,7 @@ class BookMenu extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${logic.book.value.name}',
+                          logic.title,
                           style: Get.textTheme.headlineMedium!
                               .copyWith(fontWeight: FontWeight.w500),
                         ),
@@ -84,7 +84,7 @@ class BookMenu extends StatelessWidget {
                         final c = logic.catalogues[index];
                         return ListTile(
                           onTap: (){
-                            logic.toCuttex(index);
+                            logic.toCurrentChapters(index);
                           },
                           title:  Text('${c.secondCatalogue}',style: Get.theme.textTheme.titleMedium,),
                           trailing: Text('${c.sizeNum??0}',style: Get.textTheme.titleMedium,),

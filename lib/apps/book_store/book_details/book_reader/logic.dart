@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -10,15 +11,17 @@ import 'package:screen_brightness/screen_brightness.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../model/BookList.dart';
-
+enum BookLoadingState {
+  loading,
+  error,
+  success,
+}
 class BookReaderLogic extends GetxController {
   var showFistPop = true.obs;
-  late List<CustomSelectableTextItem> customSelectableTextItems;
 
-// final PageController controller = PageController();
   var menuBarShow = false.obs;
   var menuBottomShow = false.obs;
-  var currentIndex = 0.obs;
+
   var m1 = false.obs;
   var m2 = false.obs;
   var m3 = false.obs;
@@ -27,85 +30,106 @@ class BookReaderLogic extends GetxController {
   var translateText = 0.obs;
 
   late Future<double> brightness;
-  List<List<String>> len = [];
-  late Future<List<List<String>>> f;
 
-  var  book = BookList().obs;
+  late List<CustomSelectableTextItem> customSelectableTextItems;
+
+  RxMap<Catalogue, Chapters> ccMap = RxMap();
+  final ItemScrollController itemScrollController = ItemScrollController();
+  final ScrollOffsetController scrollOffsetController =
+      ScrollOffsetController();
+  final ItemPositionsListener itemPositionsListener =
+      ItemPositionsListener.create();
+  final ScrollOffsetListener scrollOffsetListener =
+      ScrollOffsetListener.create();
 
   RxList<Catalogue> catalogues = RxList([]);
-  RxMap<Catalogue, Future<ApiResult<Chapters>>> cc = RxMap();
-
-  final ItemScrollController itemScrollController = ItemScrollController();
-  final ScrollOffsetController scrollOffsetController = ScrollOffsetController();
-  final ItemPositionsListener itemPositionsListener = ItemPositionsListener
-      .create();
-  final ScrollOffsetListener scrollOffsetListener = ScrollOffsetListener
-      .create();
+  late int bookId;
+  var currentIndex = 0.obs;
+  var isJoin = 0.obs;
+  String title = '';
 
   @override
   void onInit() {
-    book.value = Get.arguments as BookList;
-    super.onInit();
     initBook();
+    super.onInit();
+
     brightness = ScreenBrightness().system;
 
-    itemPositionsListener.itemPositions.addListener(() {
-
-    });
+    itemPositionsListener.itemPositions.addListener(_changeListener);
     init();
   }
 
+  @override
+  void onClose() {
+    itemPositionsListener.itemPositions.removeListener(_changeListener);
+    super.onClose();
+  }
+
   void initBook() {
-    Api.book_Catalogue(book.value.bookId!).then((value) {
-      if (value.success) {
-        catalogues.value = value.data ?? [];
-        if (catalogues.first.bookCatalogueId != null) {
-          cc[catalogues.first] = Api.book_Chapters(bookId: book.value.bookId!,
-              chaptersId: catalogues.first.bookCatalogueId!);
+    final List<Catalogue> getCatalogue = Get.arguments as List<Catalogue>;
+    bookId = int.parse('${Get.parameters['bookId']}');
+    currentIndex.value = int.parse('${Get.parameters['index'] ?? 0}');
+    isJoin.value = int.parse('${Get.parameters['isJoin'] ?? 0}');
+    title = Get.parameters['title'] ?? '';
+    catalogues.value = getCatalogue!;
+      if(catalogues.isNotEmpty){
+        getBook_Chapters(0);
+        if(catalogues.length>=2){
+          getBook_Chapters(1);
         }
-      } else {
-        AppToast.toast(value.message);
-        Get.back();
       }
-    });
   }
 
-  toCuttex(int index) {
-    getBook_Chapters(index);
-    itemScrollController.jumpTo(index: index);
+  toCurrentChapters(int index) {
+    currentIndex.value = index;
+    getBook_Chapters(currentIndex.value);
+    itemScrollController.jumpTo(index: currentIndex.value);
   }
 
-
-  Future<ApiResult<Chapters>>  getBook_Chapters(int index) {
+  getBook_Chapters(int index) {
     final cl = catalogues[index];
-    if (cc.containsKey(cl) && cc[cl]!=null) {
-      return cc[cl]!;
-    } else {
-      final f = Api.book_Chapters(
-          bookId: book.value.bookId!, chaptersId: cl.bookCatalogueId!);
-      cc[cl] = f;
-      return f;
+    try{
+      if (ccMap.containsKey(cl)) {
+        if(ccMap[cl]==null){
+           addBookChapters(cl);
+        }
+      }else{
+         addBookChapters(cl);
+      }
+    }catch( e){
+      final error = e as ApiResult;
+      cl.error = error.message;
+      cl.bookLoadingState.value = BookLoadingState.error;
     }
   }
 
-  void addBook() {
-    final c=AppLoading.loading();
-    Api.book_shelf_add('${book.value.bookId}').then((value){
-      c();
-      if(value.success){
-        AppToast.toast('加入成功');
-        book.update((val) {
-          val?.isJoin = 1;
-        });
+  Future<void> addBookChapters(Catalogue cl) async {
+      cl.bookLoadingState.value = BookLoadingState.loading;
+    final chapter=  await   Api.book_Chapters(bookId: bookId, chaptersId: cl.bookCatalogueId!);
+      if(chapter.success){
+        ccMap[cl] = chapter.data!;
+        cl.bookLoadingState.value = BookLoadingState.success;
       }else{
+        cl.error = chapter.message;
+        cl.bookLoadingState.value = BookLoadingState.error;
+      }
+  }
+
+
+  void addBook() {
+    final c = AppLoading.loading();
+    Api.book_shelf_add('$bookId').then((value) {
+      c();
+      if (value.success) {
+        AppToast.toast('加入成功');
+        isJoin.value = 1;
+      } else {
         AppToast.toast(value.message);
       }
-    }).catchError((e){
-
+    }).catchError((e) {
       c();
     });
   }
-
 
   init() {
     customSelectableTextItems = [
@@ -214,7 +238,6 @@ class BookReaderLogic extends GetxController {
 
   openMenuList(int index) {
     currentIndex.value = index;
-
     switch (index) {
       case 0:
         m1.value = !m1.value;
@@ -256,5 +279,8 @@ class BookReaderLogic extends GetxController {
     m4.value = false;
   }
 
-
+  void _changeListener() {
+    currentIndex.value = itemPositionsListener.itemPositions.value.first.index;
+    getBook_Chapters(currentIndex.value);
+  }
 }

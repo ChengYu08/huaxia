@@ -69,7 +69,6 @@ class DefaultBuilderOptions {
   final EdgeInsetsGeometry chapterPadding;
   final EdgeInsetsGeometry paragraphPadding;
   final TextStyle textStyle;
-
   const DefaultBuilderOptions({
     this.loaderSwitchDuration = const Duration(seconds: 1),
     this.transitionBuilder = DefaultBuilderOptions._transitionBuilder,

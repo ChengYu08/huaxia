@@ -43,7 +43,6 @@ class Routers{
   static const addSentencePage = '/HomeSentencePage/AddSentencePage';
 
   static const me = '/MePage';
-  static const bookSpeakPage = '/BookSpeakPage';
   static const sentencePage = '/MePage/SentencePage';
 }
 class AppRouters{
@@ -73,10 +72,7 @@ class AppRouters{
         name: Routers.home_sentencePage,
         page: ()=>HomeSentencePage(),
         binding: HomeSentenceBinding()),
-    GetPage(
-        name: Routers.bookSpeakPage,
-        page: ()=>BookSpeakPage(),
-        binding: BookSpeakBinding()),
+
     GetPage(
         name: Routers.addSentencePage,
         page: ()=>AddSentencePage(),

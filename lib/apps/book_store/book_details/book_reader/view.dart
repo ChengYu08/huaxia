@@ -14,6 +14,7 @@ import 'package:huaxia/apps/book_store/model/Chapters.dart';
 import 'package:huaxia/widgets/flutter_html/flutter_html.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../../../../config/http/api_service.dart';
+import '../../model/BookList.dart';
 import 'logic.dart';
 
 class BookReaderPage extends StatefulWidget {
@@ -24,12 +25,31 @@ class BookReaderPage extends StatefulWidget {
 }
 
 class _BookReaderPageState extends State<BookReaderPage> {
-  final logic = Get.find<BookReaderLogic>();
-  final appBookConfig = Get.find<AppBookConfig>();
-
+   late BookReaderLogic logic ;
+  late AppBookConfig appBookConfig ;
+  String canUp='1';
+  String tag='';
   @override
   void initState() {
+    appBookConfig = Get.find<AppBookConfig>();
+
+    final book = Get.arguments as BookList;
+    canUp = Get.parameters['canUp']??'1';
+    tag ='${ book.bookId}';
+    if(Get.isRegistered<BookReaderLogic>(tag: tag)){
+      logic = Get.find<BookReaderLogic>(tag:tag);
+    }else{
+      logic = Get.put<BookReaderLogic>(BookReaderLogic(),tag: tag);
+    }
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    if(canUp=="1"){
+      Get.delete<BookReaderLogic>(tag: tag);
+    }
+    super.dispose();
   }
 
   @override
@@ -57,13 +77,13 @@ class _BookReaderPageState extends State<BookReaderPage> {
                     itemPositionsListener: logic.itemPositionsListener,
                     scrollOffsetListener: logic.scrollOffsetListener,
                     itemBuilder: (BuildContext context, int index) {
+                      final catalogue = logic.catalogues[index];
                       if (logic.catalogues.isEmpty) {
                         return const Center(child: Text('加载中'));
                       }
-                      String title = '${logic.catalogues[index]
-                          .firstCatalogue??''} ${logic.catalogues[index]
+                      String title = '${catalogue
+                          .firstCatalogue??''} ${catalogue
                           .secondCatalogue??'第${index+1}章'}';
-                      final f = logic.getBook_Chapters(index);
                       return ValueListenableBuilder(
                           valueListenable: appBookConfig.bookConfigVN,
                           builder: (BuildContext context, bookConfig,
@@ -88,86 +108,75 @@ class _BookReaderPageState extends State<BookReaderPage> {
                                       ),
                                     ),
                                   ),
-                                  FutureBuilder<ApiResult<Chapters>>(
-                                      future: f,
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return const Center(
-                                              child:
-                                              CircularProgressIndicator());
-                                        }
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.done) {
-                                          if (snapshot.hasError) {
-                                            if (snapshot.error is ApiResult) {
-                                              final c =
-                                              snapshot.error as ApiResult;
-                                              return Center(
-                                                  child: Text(c.message));
-                                            } else {
-                                              return Center(
-                                                  child: Text(
-                                                      '${snapshot.error ??
-                                                          ''}'));
-                                            }
+                                  ValueListenableBuilder(valueListenable: catalogue.bookLoadingState,
+                                    builder: (BuildContext context, BookLoadingState value, Widget? child) {
+                                      if(value ==BookLoadingState.success){
+                                        final Chapters data = logic.ccMap[catalogue]!;
+                                        return Obx(() {
+                                          String html;
+                                          if(logic.translateText.value==0){
+                                            html = data.cont??'当前无数据，请联系开发人员';
+                                          }else if(logic.translateText.value ==1){
+                                            html = data.translation??'当前无数据，请联系开发人员';
+                                          }else{
+                                            html = data.chapters??'当前无数据，请联系开发人员';
                                           }
-                                          final data = snapshot.data!.data!;
-                                          return Obx(() {
-                                            String html;
-                                            if(logic.translateText.value==0){
-                                              html = data.cont??'当前无数据，请联系开发人员';
-                                            }else if(logic.translateText.value ==1){
-                                              html = data.translation??'当前无数据，请联系开发人员';
-                                            }else{
-                                              html = data.chapters??'当前无数据，请联系开发人员';
-                                            }
-                                            return SelectableHtml(
-                                              data: html,
-                                              items:
-                                              logic.customSelectableTextItems,
-                                              style: {
-                                                'p': Style(
-                                                    fontSize: FontSize(
-                                                        bookConfig.textSize),
-                                                    lineHeight: LineHeight(
-                                                        bookConfig.textHight))
-                                              },
-                                              onSingleTapUp:
-                                                  (TapDragUpDetails tap) {
-                                                final dx = tap.localPosition.dx;
-                                                final cW = Get.width / 3;
-                                                if (dx > (2 * cW)) {
-                                                  print("下一页");
-                                                  // logic.controller.nextPage(
-                                                  //     duration: 300.milliseconds,
-                                                  //     curve: Curves.linear);
-                                                } else if (dx >= cW &&
-                                                    dx <= (cW * 2)) {
-                                                  print("菜单");
-                                                  logic.onTapMenu();
-                                                } else if (dx <= cW) {
-                                                  // logic.controller.previousPage(
-                                                  //     duration: 300.milliseconds,
-                                                  //     curve: Curves.linear);
-                                                  print("上一页");
-                                                } else {
-                                                  // logic.controller.nextPage(
-                                                  //     duration: 300.milliseconds,
-                                                  //     curve: Curves.linear);
-                                                  print("下一页");
-                                                }
-                                              },
-                                              onSelectionChanged:
-                                                  (TextSelection selection,
-                                                  SelectionChangedCause?
-                                                  cause) {},
-                                            );
-                                          });
-                                        } else {
-                                          throw '未知原因';
-                                        }
-                                      }),
+                                          return SelectableHtml(
+                                            data: html,
+                                            items:
+                                            logic.customSelectableTextItems,
+                                            style: {
+                                              'p': Style(
+                                                  fontSize: FontSize(
+                                                      bookConfig.textSize),
+                                                  lineHeight: LineHeight(
+                                                      bookConfig.textHight))
+                                            },
+                                            onSingleTapUp:
+                                                (TapDragUpDetails tap) {
+                                              final dx = tap.localPosition.dx;
+                                              final cW = Get.width / 3;
+                                              if (dx > (2 * cW)) {
+                                                print("下一页");
+                                                // logic.controller.nextPage(
+                                                //     duration: 300.milliseconds,
+                                                //     curve: Curves.linear);
+                                              } else if (dx >= cW &&
+                                                  dx <= (cW * 2)) {
+                                                print("菜单");
+                                                logic.onTapMenu();
+                                              } else if (dx <= cW) {
+                                                // logic.controller.previousPage(
+                                                //     duration: 300.milliseconds,
+                                                //     curve: Curves.linear);
+                                                print("上一页");
+                                              } else {
+                                                // logic.controller.nextPage(
+                                                //     duration: 300.milliseconds,
+                                                //     curve: Curves.linear);
+                                                print("下一页");
+                                              }
+                                            },
+                                            onSelectionChanged:
+                                                (TextSelection selection,
+                                                SelectionChangedCause?
+                                                cause) {},
+                                          );
+                                        });
+                                      }else if(value ==BookLoadingState.loading){
+                                        return const Expanded(child: Center(child: CircularProgressIndicator()));
+                                      }else if(value == BookLoadingState.error){
+                                          if(catalogue.error!=null){
+                                            return  Expanded(child: Center(child:Text('${catalogue.error}')));
+                                          }else{
+                                            return  const Expanded(child: Center(child:Text('未知错误')));
+                                          }
+                                      }else{
+                                        return  const SizedBox();
+                                      }
+
+
+                                    },),
                                 ],
                               ),
                             );

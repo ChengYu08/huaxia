@@ -13,7 +13,14 @@ import 'package:slide_countdown/slide_countdown.dart';
 enum LoadingState { suc, loading, error }
 
 class BookSpeakLogic extends GetxController {
+  final int?  cutterIndex;
+  final BookList bookList;
+  BookSpeakLogic( {required this.bookList,this.cutterIndex, });
+
   var book = BookList().obs;
+
+
+
   RxList<Catalogue> catalogues = RxList([]);
   final ValueNotifier<LoadingState> state = ValueNotifier(LoadingState.loading);
   RxMap<int, List<dom.Element>> speakMap = RxMap({});
@@ -27,8 +34,10 @@ class BookSpeakLogic extends GetxController {
   @override
   void onInit() {
     initTTS();
-    book.value = Get.arguments as BookList;
-
+    if(cutterIndex!=null){
+      index.value = cutterIndex!;
+    }
+    book.value = bookList;
     streamDuration = StreamDuration(
       30.minutes,
       autoPlay: false,
@@ -38,7 +47,6 @@ class BookSpeakLogic extends GetxController {
         timeIndex.value =0;
       }
     );
-
     initBook();
     super.onInit();
   }
@@ -90,7 +98,7 @@ class BookSpeakLogic extends GetxController {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 50,
                 ),
                 Text(
@@ -294,10 +302,10 @@ class BookSpeakLogic extends GetxController {
     book_Catalogue = Api.book_Catalogue(book.value.bookId!).then((value) {
       if (value.success) {
         catalogues.value = value.data ?? [];
-        if (catalogues.first.bookCatalogueId != null) {
+        if (catalogues[index.value].bookCatalogueId != null) {
           Api.book_Chapters(
                   bookId: book.value.bookId!,
-                  chaptersId: catalogues.first.bookCatalogueId!)
+                  chaptersId: catalogues[index.value].bookCatalogueId!)
               .then((value) {
             state.value = LoadingState.suc;
             _asyncMap(value.data?.cont ?? '');

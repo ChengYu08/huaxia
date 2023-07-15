@@ -101,7 +101,7 @@ class _EpubViewState extends State<EpubView> {
     }
     _chapters = parseChapters(_controller._document!);
     final parseParagraphsResult =
-        parseParagraphs(_chapters, _controller._document!.Content);
+    parseParagraphs(_chapters, _controller._document!.Content);
     _paragraphs = parseParagraphsResult.flatParagraphs;
     _chapterIndexes.addAll(parseParagraphsResult.chapterIndexes);
 
@@ -138,6 +138,7 @@ class _EpubViewState extends State<EpubView> {
       paragraphNumber: paragraphIndex + 1,
       position: position,
     );
+
     _controller.currentValueListenable.value = _currentValue;
     widget.onChapterChanged?.call(_currentValue);
   }
@@ -293,7 +294,6 @@ class _EpubViewState extends State<EpubView> {
         leadingEdge < _minLeadingEdge) {
       posIndex += 1;
     }
-
     return posIndex;
   }
 

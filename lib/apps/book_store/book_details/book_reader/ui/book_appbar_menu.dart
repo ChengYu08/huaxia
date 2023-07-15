@@ -20,9 +20,9 @@ class  BookAppbarMenu extends StatelessWidget {
         left: 0,
         right: 0,
         child: AppBar(
-          title: Text('${bookReaderLogic.book.value.name}'),
+          title: Text(bookReaderLogic.title),
           actions: [
-            if(bookReaderLogic.book.value.isJoin==0)
+            if(bookReaderLogic.isJoin.value==0)
             TextButton.icon(
               onPressed: bookReaderLogic.addBook,
               icon: ImageIcon(

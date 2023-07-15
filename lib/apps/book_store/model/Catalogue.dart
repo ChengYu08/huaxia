@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:huaxia/apps/book_store/book_details/book_reader/logic.dart';
+
 T? asT<T>(dynamic value) {
   if (value is T) {
     return value;
@@ -8,7 +11,7 @@ T? asT<T>(dynamic value) {
 }
 
 class Catalogue {
-  const Catalogue({
+   Catalogue({
     this.createBy,
     this.createTime,
     this.updateBy,
@@ -47,7 +50,8 @@ class Catalogue {
   final int? bookId;
   final int? sizeNum;
   final int? isDel;
-
+  String? error;
+  final ValueNotifier<BookLoadingState> bookLoadingState = ValueNotifier(BookLoadingState.loading);
   @override
   String toString() {
     return jsonEncode(this);

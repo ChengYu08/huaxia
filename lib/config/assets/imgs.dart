@@ -71,6 +71,7 @@ class Imgs{
   static final String ic_play =getPath('ic_play');
   static final String ic_pause =getPath('ic_pause');
   static final String ic_voice =getPath('ic_voice');
+  static final String ic_listen =getPath('ic_listen');
 
 
 
