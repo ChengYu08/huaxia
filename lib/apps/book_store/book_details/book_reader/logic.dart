@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:huaxia/apps/book_store/book_details/book_reader/data/book_paragraph.dart';
 import 'package:huaxia/apps/book_store/model/Catalogue.dart';
 import 'package:huaxia/apps/book_store/model/Chapters.dart';
 import 'package:huaxia/config/config.dart';
@@ -11,6 +12,7 @@ import 'package:screen_brightness/screen_brightness.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../model/BookList.dart';
+import 'data/book_chapter.dart';
 enum BookLoadingState {
   loading,
   error,
@@ -33,7 +35,10 @@ class BookReaderLogic extends GetxController {
 
   late List<CustomSelectableTextItem> customSelectableTextItems;
 
-  RxMap<Catalogue, Chapters> ccMap = RxMap();
+  RxList<BookChapter> bookChapter =  RxList([]);
+
+
+
   final ItemScrollController itemScrollController = ItemScrollController();
   final ScrollOffsetController scrollOffsetController =
       ScrollOffsetController();
@@ -42,9 +47,10 @@ class BookReaderLogic extends GetxController {
   final ScrollOffsetListener scrollOffsetListener =
       ScrollOffsetListener.create();
 
-  RxList<Catalogue> catalogues = RxList([]);
+
   late int bookId;
   var currentIndex = 0.obs;
+  var bottomNavigationBarCurrentIndex = 0.obs;
   var isJoin = 0.obs;
   String title = '';
 
@@ -66,53 +72,66 @@ class BookReaderLogic extends GetxController {
   }
 
   void initBook() {
-    final List<Catalogue> getCatalogue = Get.arguments as List<Catalogue>;
+    bookChapter.value = Get.arguments as List<BookChapter>;
     bookId = int.parse('${Get.parameters['bookId']}');
     currentIndex.value = int.parse('${Get.parameters['index'] ?? 0}');
     isJoin.value = int.parse('${Get.parameters['isJoin'] ?? 0}');
     title = Get.parameters['title'] ?? '';
-    catalogues.value = getCatalogue!;
-      if(catalogues.isNotEmpty){
-        getBook_Chapters(0);
-        if(catalogues.length>=2){
-          getBook_Chapters(1);
-        }
-      }
+    if(bookChapter.length>=3){
+      List.generate(3, (index) => findBookChapter(index));
+    }
   }
 
   toCurrentChapters(int index) {
     currentIndex.value = index;
-    getBook_Chapters(currentIndex.value);
+    findBookChapter(currentIndex.value);
     itemScrollController.jumpTo(index: currentIndex.value);
   }
 
-  getBook_Chapters(int index) {
-    final cl = catalogues[index];
+    Future<BookChapter>   findBookChapter(int index) async{
+    BookChapter chapter= bookChapter[index];
     try{
-      if (ccMap.containsKey(cl)) {
-        if(ccMap[cl]==null){
-           addBookChapters(cl);
-        }
-      }else{
-         addBookChapters(cl);
+      if (chapter.bookParagraph==null) {
+       final paragraph = await addBookChapters(chapter);
+          if(paragraph!=null){
+            chapter.bookParagraph = paragraph;
+          }
       }
+      return chapter;
     }catch( e){
       final error = e as ApiResult;
-      cl.error = error.message;
-      cl.bookLoadingState.value = BookLoadingState.error;
+     chapter.error = error.message;
+     chapter.bookLoadingState.value = BookLoadingState.error;
+     return  chapter;
     }
   }
 
-  Future<void> addBookChapters(Catalogue cl) async {
-      cl.bookLoadingState.value = BookLoadingState.loading;
-    final chapter=  await   Api.book_Chapters(bookId: bookId, chaptersId: cl.bookCatalogueId!);
+  Future<BookParagraph? > addBookChapters(BookChapter  bookChapter) async {
+    bookChapter.bookLoadingState.value = BookLoadingState.loading;
+    try{
+      final chapter=  await Api.book_Chapters(bookId: bookId, chaptersId: bookChapter.paragraphId);
       if(chapter.success){
-        ccMap[cl] = chapter.data!;
-        cl.bookLoadingState.value = BookLoadingState.success;
+
+        BookParagraph bookParagraph = BookParagraph(paragraphId: bookChapter.paragraphId,
+            originalArticle: chapter.data!.cont,
+            translationArticle: chapter.data!.translation,
+            explinArticle: chapter.data!.chapters
+        );
+
+        bookChapter.bookLoadingState.value = BookLoadingState.success;
+        return bookParagraph;
       }else{
-        cl.error = chapter.message;
-        cl.bookLoadingState.value = BookLoadingState.error;
+        bookChapter.error = chapter.message;
+        bookChapter.bookLoadingState.value = BookLoadingState.error;
+        return null;
       }
+    }catch(e){
+      final error = e as ApiResult;
+      bookChapter.error = error.message;
+      bookChapter.bookLoadingState.value = BookLoadingState.error;
+      return null;
+    }
+
   }
 
 
@@ -237,7 +256,7 @@ class BookReaderLogic extends GetxController {
   }
 
   openMenuList(int index) {
-    currentIndex.value = index;
+    bottomNavigationBarCurrentIndex.value = index;
     switch (index) {
       case 0:
         m1.value = !m1.value;
@@ -279,8 +298,21 @@ class BookReaderLogic extends GetxController {
     m4.value = false;
   }
 
+  int _recordIndex = 0;
   void _changeListener() {
-    currentIndex.value = itemPositionsListener.itemPositions.value.first.index;
-    getBook_Chapters(currentIndex.value);
+    final int itemIndex =  itemPositionsListener.itemPositions.value.first.index;
+        if(_recordIndex!=itemIndex){
+          _recordIndex=itemIndex;
+          currentIndex.value = itemIndex;
+          if(currentIndex.value<=bookChapter.length){
+            List.generate(3, (index) {
+              final findIndex=itemIndex+index;
+              if(findIndex<bookChapter.length){
+                findBookChapter(findIndex);
+              }
+            });
+          }
+        }
+
   }
 }

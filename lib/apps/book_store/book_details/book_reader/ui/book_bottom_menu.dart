@@ -33,7 +33,7 @@ class BookBottomMenu extends StatelessWidget {
                 TextStyle(fontSize: 10, color: Color(0xff202329)),
               )),
           child: BottomNavigationBar(
-            currentIndex: bookReaderLogic.currentIndex.value,
+            currentIndex: bookReaderLogic.bottomNavigationBarCurrentIndex.value,
             onTap: (i) {
               bookReaderLogic.openMenuList(i);
             },

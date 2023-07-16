@@ -51,7 +51,7 @@ class Catalogue {
   final int? sizeNum;
   final int? isDel;
   String? error;
-  final ValueNotifier<BookLoadingState> bookLoadingState = ValueNotifier(BookLoadingState.loading);
+
   @override
   String toString() {
     return jsonEncode(this);

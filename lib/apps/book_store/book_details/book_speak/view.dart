@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:huaxia/application/tts/tts_app.dart';
+import 'package:huaxia/apps/book_store/book_details/book_reader/data/book_chapter.dart';
 import 'package:huaxia/config/assets/imgs.dart';
 import 'package:huaxia/config/config.dart';
 import 'package:huaxia/widgets/book_cover.dart';
@@ -9,10 +10,13 @@ import '../../model/BookList.dart';
 import 'logic.dart';
 
 class BookSpeakPage extends StatefulWidget {
-  final BookList bookList;
+  final List<BookChapter> bookChapter;
   final int? index;
+  final String tag;
+  final int bookId;
+  final int isJoin;
 
-  const BookSpeakPage({required this.bookList, super.key, this.index});
+  const BookSpeakPage({required this.bookChapter, super.key,required this.tag, this.index, required this.bookId,this.isJoin=0});
 
   @override
   State<BookSpeakPage> createState() => _BookSpeakPageState();
@@ -20,18 +24,15 @@ class BookSpeakPage extends StatefulWidget {
 
 class _BookSpeakPageState extends State<BookSpeakPage> {
   late BookSpeakLogic logic;
-
   String tag = '';
-
   @override
   void initState() {
-    final book = widget.bookList;
-    tag = '${ book.bookId}';
+    final book = widget.bookChapter;
+    tag = widget.tag;
     if (Get.isRegistered<BookSpeakLogic>(tag: tag)) {
       logic = Get.find<BookSpeakLogic>(tag: tag);
     } else {
-      logic = Get.put<BookSpeakLogic>(
-          BookSpeakLogic(bookList: book, cutterIndex: widget.index), tag: tag);
+      logic = Get.put<BookSpeakLogic>(BookSpeakLogic(bookChapter: book,bookId: widget.bookId, cutterIndex: widget.index), tag: tag);
     }
     super.initState();
   }

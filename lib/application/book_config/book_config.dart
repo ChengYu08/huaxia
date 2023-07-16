@@ -3,7 +3,7 @@
 import 'package:hive/hive.dart';
 part 'book_config.g.dart';
 
-@HiveType(typeId: 1)
+@HiveType(typeId: 10)
 class BookConfig extends HiveObject{
   @HiveField(0,defaultValue: 16)
    double textSize;

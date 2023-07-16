@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:huaxia/application/book_config/app_book_config.dart';
+import 'package:huaxia/apps/book_store/book_details/book_reader/data/book_paragraph.dart';
 import 'package:huaxia/apps/book_store/book_details/book_reader/ui/book_appbar_menu.dart';
 import 'package:huaxia/apps/book_store/book_details/book_reader/ui/book_bottom_menu.dart';
 import 'package:huaxia/apps/book_store/book_details/book_reader/ui/book_menu.dart';
@@ -27,15 +28,12 @@ class BookReaderPage extends StatefulWidget {
 class _BookReaderPageState extends State<BookReaderPage> {
    late BookReaderLogic logic ;
   late AppBookConfig appBookConfig ;
-  String canUp='1';
+
   String tag='';
   @override
   void initState() {
     appBookConfig = Get.find<AppBookConfig>();
-
-    final book = Get.arguments as BookList;
-    canUp = Get.parameters['canUp']??'1';
-    tag ='${ book.bookId}';
+    tag = Get.parameters['bookId']??'';
     if(Get.isRegistered<BookReaderLogic>(tag: tag)){
       logic = Get.find<BookReaderLogic>(tag:tag);
     }else{
@@ -46,9 +44,7 @@ class _BookReaderPageState extends State<BookReaderPage> {
 
   @override
   void dispose() {
-    if(canUp=="1"){
-      Get.delete<BookReaderLogic>(tag: tag);
-    }
+    Get.delete<BookReaderLogic>(tag: tag);
     super.dispose();
   }
 
@@ -71,19 +67,17 @@ class _BookReaderPageState extends State<BookReaderPage> {
                 decoration: const BoxDecoration(color: Colors.white),
                 child: Obx(() {
                   return ScrollablePositionedList.builder(
-                    itemCount: logic.catalogues.length,
+                    itemCount: logic.bookChapter.length,
                     itemScrollController: logic.itemScrollController,
                     scrollOffsetController: logic.scrollOffsetController,
                     itemPositionsListener: logic.itemPositionsListener,
                     scrollOffsetListener: logic.scrollOffsetListener,
                     itemBuilder: (BuildContext context, int index) {
-                      final catalogue = logic.catalogues[index];
-                      if (logic.catalogues.isEmpty) {
+                      final chapter = logic.bookChapter[index];
+                      if (logic.bookChapter.isEmpty) {
                         return const Center(child: Text('加载中'));
                       }
-                      String title = '${catalogue
-                          .firstCatalogue??''} ${catalogue
-                          .secondCatalogue??'第${index+1}章'}';
+                      String title = '${chapter.title}第${index+1}章';
                       return ValueListenableBuilder(
                           valueListenable: appBookConfig.bookConfigVN,
                           builder: (BuildContext context, bookConfig,
@@ -108,21 +102,21 @@ class _BookReaderPageState extends State<BookReaderPage> {
                                       ),
                                     ),
                                   ),
-                                  ValueListenableBuilder(valueListenable: catalogue.bookLoadingState,
+                                  ValueListenableBuilder(valueListenable: chapter.bookLoadingState,
                                     builder: (BuildContext context, BookLoadingState value, Widget? child) {
                                       if(value ==BookLoadingState.success){
-                                        final Chapters data = logic.ccMap[catalogue]!;
+                                        final BookParagraph data = chapter.bookParagraph!;
                                         return Obx(() {
-                                          String html;
+                                          var html;
                                           if(logic.translateText.value==0){
-                                            html = data.cont??'当前无数据，请联系开发人员';
+                                            html = data.originalArticleElement;
                                           }else if(logic.translateText.value ==1){
-                                            html = data.translation??'当前无数据，请联系开发人员';
+                                            html = data.translationArticleElement;
                                           }else{
-                                            html = data.chapters??'当前无数据，请联系开发人员';
+                                            html = data.explinArticleElement;
                                           }
-                                          return SelectableHtml(
-                                            data: html,
+                                          return SelectableHtml.fromDom(
+                                           document: html,
                                             items:
                                             logic.customSelectableTextItems,
                                             style: {
@@ -164,12 +158,21 @@ class _BookReaderPageState extends State<BookReaderPage> {
                                           );
                                         });
                                       }else if(value ==BookLoadingState.loading){
-                                        return const Expanded(child: Center(child: CircularProgressIndicator()));
+                                        return Center(child: CircularProgressIndicator());
                                       }else if(value == BookLoadingState.error){
-                                          if(catalogue.error!=null){
-                                            return  Expanded(child: Center(child:Text('${catalogue.error}')));
+
+
+                                          if(chapter.error!=null){
+                                            return  Column(
+                                              children: [
+                                                Text('${chapter.error}'),
+                                                TextButton(onPressed: (){
+                                                  logic.findBookChapter(index);
+                                                }, child: Text('重新加载'))
+                                              ],
+                                            );
                                           }else{
-                                            return  const Expanded(child: Center(child:Text('未知错误')));
+                                            return  Center(child:Text('未知错误'));
                                           }
                                       }else{
                                         return  const SizedBox();

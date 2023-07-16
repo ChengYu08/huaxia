@@ -23,6 +23,7 @@ class BookTranslateText extends StatelessWidget {
             FloatingActionButton(onPressed: () {
               bookReaderLogic.translateText.value = 0;
             },
+              heroTag: '原文',
               shape: const CircleBorder(
                   side: BorderSide(color: Colors.white, width: 1)),
               backgroundColor: Colors.white,
@@ -34,6 +35,7 @@ class BookTranslateText extends StatelessWidget {
                 bookReaderLogic.translateText.value = 1;
               },
                 backgroundColor: Colors.white,
+                heroTag: '译文',
                 shape: const CircleBorder(
                     side: BorderSide(color: Colors.white, width: 1)),
                 child: Text('译文', style: Get.textTheme.bodySmall!.copyWith(color:   bookReaderLogic.translateText.value == 1?Get.theme.primaryColor:null),),),
@@ -42,6 +44,7 @@ class BookTranslateText extends StatelessWidget {
               bookReaderLogic.translateText.value = 2;
             },
               backgroundColor: Colors.white,
+              heroTag: '解读',
               shape: const CircleBorder(
                   side: BorderSide(color: Colors.white, width: 1)),
               child: Text('解读', style: Get.textTheme.bodySmall!.copyWith(color:bookReaderLogic.translateText.value == 2?Get.theme.primaryColor:null),),),

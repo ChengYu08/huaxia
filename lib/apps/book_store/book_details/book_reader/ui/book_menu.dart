@@ -51,7 +51,7 @@ class BookMenu extends StatelessWidget {
                               .copyWith(fontWeight: FontWeight.w500),
                         ),
                         Text(
-                          '共${logic.catalogues.length}章',
+                          '共${logic.bookChapter.length}章',
                           style: Get.textTheme.labelLarge!.copyWith(
                             fontSize: 14,
                           ),
@@ -79,15 +79,15 @@ class BookMenu extends StatelessWidget {
               Expanded(
                 child: Obx(() {
                   return  ListView.builder(
-                      itemCount: logic.catalogues.length,
+                      itemCount: logic.bookChapter.length,
                       itemBuilder: (context, index) {
-                        final c = logic.catalogues[index];
+                        final c = logic.bookChapter[index];
                         return ListTile(
                           onTap: (){
                             logic.toCurrentChapters(index);
                           },
-                          title:  Text('${c.secondCatalogue}',style: Get.theme.textTheme.titleMedium,),
-                          trailing: Text('${c.sizeNum??0}',style: Get.textTheme.titleMedium,),
+                          title:  Text('${c.title}',style: Get.theme.textTheme.titleMedium,),
+
                         );
                       });
                 }),

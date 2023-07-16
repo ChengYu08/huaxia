@@ -93,7 +93,7 @@ class AppRouters{
     GetPage(
         name: Routers.bookReaderPage,
         page: ()=>BookReaderPage(),
-        binding: BookReaderBinding()),
+      ),
     GetPage(
         name: Routers.me,
         page: ()=>MePage(),

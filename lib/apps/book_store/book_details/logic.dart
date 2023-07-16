@@ -3,6 +3,7 @@ import 'package:huaxia/apps/book_store/model/BookList.dart';
 
 import '../../../config/config.dart';
 import '../model/Catalogue.dart';
+import 'book_reader/data/book_chapter.dart';
 
 class BookDetailsLogic extends GetxController {
 
@@ -15,7 +16,21 @@ class BookDetailsLogic extends GetxController {
     super.onInit();
   }
 
-
+  void goBook(List<Catalogue> catalogue) {
+    final List<BookChapter> b = catalogue
+        .map((catalogue) => BookChapter(
+        title: catalogue.secondCatalogue,
+        bookId: book.value.bookId,
+        paragraphId: catalogue.bookCatalogueId!))
+        .toList();
+    Get.toNamed(Routers.bookReaderPage, arguments: b, parameters: {
+      'bookId': '${book.value.bookId}',
+      'title': '${book.value.name}',
+      'author': '${book.value.author}',
+      'isJoin': '${book.value.isJoin}',
+      'index': '0',
+    });
+  }
 
   void addBook() {
     final c=AppLoading.loading();

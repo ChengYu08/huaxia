@@ -8,7 +8,7 @@ part of 'book_config.dart';
 
 class BookConfigAdapter extends TypeAdapter<BookConfig> {
   @override
-  final int typeId = 1;
+  final int typeId = 10;
 
   @override
   BookConfig read(BinaryReader reader) {
