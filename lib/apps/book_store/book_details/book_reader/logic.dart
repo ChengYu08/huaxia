@@ -10,7 +10,7 @@ import 'package:huaxia/config/config.dart';
 import 'package:huaxia/widgets/custom_selectable_text/custom_selectable_text.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-
+import 'package:html/dom.dart' as dom;
 import '../../model/BookList.dart';
 import 'data/book_chapter.dart';
 enum BookLoadingState {
@@ -30,6 +30,11 @@ class BookReaderLogic extends GetxController {
   var m4 = false.obs;
 
   var translateText = 0.obs;
+
+
+
+
+
 
   late Future<double> brightness;
 
@@ -210,7 +215,16 @@ class BookReaderLogic extends GetxController {
           ),
           controlType: SelectionControlType.other,
           onPressed: (text, textSelection) {
-            String changed = '<u>$text</u>';
+              Get.log("==onPressed=$text");
+              String selectText = '<u>$text</u>';
+              final book =  bookChapter[currentIndex.value];
+              if(book.bookParagraph!=null){
+                book.bookParagraph!.originalArticle =
+                    book.bookParagraph!.originalArticle!.replaceFirst(text, selectText,textSelection.start);
+                bookChapter.refresh();
+              }
+
+
           }),
       CustomSelectableTextItem.icon(
           icon: Column(

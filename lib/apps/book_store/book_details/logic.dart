@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:huaxia/application/tts/tts_app.dart';
 import 'package:huaxia/apps/book_store/model/BookList.dart';
 
 import '../../../config/config.dart';
@@ -9,10 +11,22 @@ class BookDetailsLogic extends GetxController {
 
   var  book = BookList().obs;
   late Future<ApiResult<List<Catalogue>>>   bookCatalogue;
+  late int bookId;
 @override
   void onInit() {
-      book.value = Get.arguments as BookList;
-      bookCatalogue= Api.book_Catalogue(book.value.bookId!);
+  bookId = int.parse('${Get.parameters['bookId']}');
+      if(Get.arguments is BookList){
+        book.value = Get.arguments as BookList;
+      }else{
+        Api.book_info(bookId).then((value) {
+          if(value.success){
+            book.value = value.data!;
+          }
+        });
+      }
+
+
+      bookCatalogue= Api.book_Catalogue(bookId);
     super.onInit();
   }
 
@@ -48,5 +62,18 @@ class BookDetailsLogic extends GetxController {
       AppToast.toast(e.message);
       c();
     });
+  }
+
+  void goSpeak(List<Catalogue> catalogue,BuildContext context) {
+    final List<BookChapter> bookChapter = catalogue
+        .map((catalogue) => BookChapter(
+        title: catalogue.secondCatalogue,
+        bookId: book.value.bookId,
+        paragraphId: catalogue.bookCatalogueId!))
+        .toList();
+    final tts = Get.find<TTSApp>();
+    tts.openSpeakPage(context, bookChapter:bookChapter,
+        tag: '${book.value.bookId}', bookId: book.value.bookId!,
+        title: book.value.name!, author: book.value.author!);
   }
 }

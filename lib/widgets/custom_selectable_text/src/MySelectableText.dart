@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+
 import 'dart:ui' as ui show BoxHeightStyle, BoxWidthStyle;
 
 import 'package:flutter/cupertino.dart';
@@ -28,7 +29,7 @@ import 'package:flutter/rendering.dart';
 /// This value is in device pixels, not logical pixels as is typically used
 /// throughout the codebase.
 const int iOSHorizontalOffset = -2;
-
+const selectionTextStyle = TextStyle(decoration: TextDecoration.underline);
 class _TextSpanEditingController extends TextEditingController {
   _TextSpanEditingController({required TextSpan textSpan}):
         _textSpan = textSpan,
@@ -38,11 +39,13 @@ class _TextSpanEditingController extends TextEditingController {
 
   @override
   TextSpan buildTextSpan({required BuildContext context, TextStyle? style, required bool withComposing}) {
-    // This does not care about composing.
+
+
     return TextSpan(
       style: style,
       children: <TextSpan>[_textSpan],
     );
+
   }
 
   @override
@@ -496,6 +499,7 @@ class _SelectableTextState extends State<MySelectableText> implements TextSelect
 
   @override
   void initState() {
+
     super.initState();
     _selectionGestureDetectorBuilder = _SelectableTextSelectionGestureDetectorBuilder(
       state: this,
@@ -503,7 +507,9 @@ class _SelectableTextState extends State<MySelectableText> implements TextSelect
     _controller = _TextSpanEditingController(
       textSpan: widget.textSpan ?? TextSpan(text: widget.data),
     );
+
     _controller.addListener(_onControllerChanged);
+
   }
 
   @override
@@ -548,6 +554,7 @@ class _SelectableTextState extends State<MySelectableText> implements TextSelect
         _showSelectionHandles = willShowSelectionHandles;
       });
     }
+
 
     widget.onSelectionChanged?.call(selection, cause);
 

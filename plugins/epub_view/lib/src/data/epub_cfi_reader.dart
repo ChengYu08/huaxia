@@ -173,7 +173,6 @@ class EpubCfiReader {
 
     final index = paragraphs.indexWhere(
         (paragraph) => paragraph.element.outerHtml == element.outerHtml);
-
     if (index == -1) {
       return null;
     }

@@ -55,13 +55,16 @@ class BookTranslateText extends StatelessWidget {
                 builder: (BuildContext context, bool value, Widget? child) {
                   if(value){
                     return const SizedBox.shrink();
-
                   }else{
                     return IconButton(onPressed: (){
                       if(value && !ttsApp.showPages.value){
                         ttsApp.showPages.value = true;
                       }else{
-                     //   ttsApp.showSpeak(bookReaderLogic.book.value,context: context,index: bookReaderLogic.currentIndex.value);
+                      ttsApp.openSpeakPage(context, bookChapter: bookReaderLogic.bookChapter.value,
+                          tag: '${bookReaderLogic.bookId}', bookId: bookReaderLogic.bookId,
+                          isJoin: bookReaderLogic.isJoin.value,
+                          index: bookReaderLogic.currentIndex.value,
+                          title: bookReaderLogic.title, author: bookReaderLogic.title);
                       }
                     }, icon: Image.asset(Imgs.ic_listen,width: 60,height: 60,));
                   }

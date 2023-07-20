@@ -26,18 +26,20 @@ class BookReaderPage extends StatefulWidget {
 }
 
 class _BookReaderPageState extends State<BookReaderPage> {
-   late BookReaderLogic logic ;
-  late AppBookConfig appBookConfig ;
+  late BookReaderLogic logic;
 
-  String tag='';
+  late AppBookConfig appBookConfig;
+
+  String tag = '';
+
   @override
   void initState() {
     appBookConfig = Get.find<AppBookConfig>();
-    tag = Get.parameters['bookId']??'';
-    if(Get.isRegistered<BookReaderLogic>(tag: tag)){
-      logic = Get.find<BookReaderLogic>(tag:tag);
-    }else{
-      logic = Get.put<BookReaderLogic>(BookReaderLogic(),tag: tag);
+    tag = Get.parameters['bookId'] ?? '';
+    if (Get.isRegistered<BookReaderLogic>(tag: tag)) {
+      logic = Get.find<BookReaderLogic>(tag: tag);
+    } else {
+      logic = Get.put<BookReaderLogic>(BookReaderLogic(), tag: tag);
     }
     super.initState();
   }
@@ -55,7 +57,9 @@ class _BookReaderPageState extends State<BookReaderPage> {
         bookReaderLogic: logic,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: BookTranslateText(bookReaderLogic: logic,),
+      floatingActionButton: BookTranslateText(
+        bookReaderLogic: logic,
+      ),
       body: Stack(
         fit: StackFit.expand,
         clipBehavior: Clip.none,
@@ -77,7 +81,7 @@ class _BookReaderPageState extends State<BookReaderPage> {
                       if (logic.bookChapter.isEmpty) {
                         return const Center(child: Text('加载中'));
                       }
-                      String title = '${chapter.title}第${index+1}章';
+                      String title = '${chapter.title}第${index + 1}章';
                       return ValueListenableBuilder(
                           valueListenable: appBookConfig.bookConfigVN,
                           builder: (BuildContext context, bookConfig,
@@ -89,42 +93,56 @@ class _BookReaderPageState extends State<BookReaderPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(height: Get.statusBarHeight,),
+                                  SizedBox(
+                                    height: Get.statusBarHeight,
+                                  ),
                                   Padding(
-                                    padding:
-                                    const EdgeInsets.only(bottom: 20),
+                                    padding: const EdgeInsets.only(bottom: 20),
                                     child: Text(
                                       title,
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 4 + bookConfig.textSize,
-                                          fontWeight: FontWeight.bold
-                                      ),
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  ValueListenableBuilder(valueListenable: chapter.bookLoadingState,
-                                    builder: (BuildContext context, BookLoadingState value, Widget? child) {
-                                      if(value ==BookLoadingState.success){
-                                        final BookParagraph data = chapter.bookParagraph!;
+                                  ValueListenableBuilder(
+                                    valueListenable: chapter.bookLoadingState,
+                                    builder: (BuildContext context,
+                                        BookLoadingState value, Widget? child) {
+                                      if (value == BookLoadingState.success) {
+                                        final BookParagraph data =
+                                            chapter.bookParagraph!;
                                         return Obx(() {
                                           var html;
-                                          if(logic.translateText.value==0){
+                                          if (logic.translateText.value == 0) {
                                             html = data.originalArticleElement;
-                                          }else if(logic.translateText.value ==1){
-                                            html = data.translationArticleElement;
-                                          }else{
+                                          } else if (logic
+                                                  .translateText.value ==
+                                              1) {
+                                            html =
+                                                data.translationArticleElement;
+                                          } else {
                                             html = data.explinArticleElement;
                                           }
                                           return SelectableHtml.fromDom(
-                                           document: html,
-                                            items:
-                                            logic.customSelectableTextItems,
+                                            document: html,
+                                            items: logic.customSelectableTextItems,
                                             style: {
                                               'p': Style(
                                                   fontSize: FontSize(
                                                       bookConfig.textSize),
                                                   lineHeight: LineHeight(
-                                                      bookConfig.textHight))
+                                                      bookConfig.textHight)),
+                                              'u':Style(
+
+                                                textDecoration: TextDecoration.underline,
+                                                textDecorationStyle: TextDecorationStyle.solid,
+                                                textDecorationColor: Get.theme.primaryColor,
+                                                textDecorationThickness: 3
+
+
+                                              )
                                             },
                                             onSingleTapUp:
                                                 (TapDragUpDetails tap) {
@@ -151,35 +169,44 @@ class _BookReaderPageState extends State<BookReaderPage> {
                                                 print("下一页");
                                               }
                                             },
-                                            onSelectionChanged:
-                                                (TextSelection selection,
-                                                SelectionChangedCause?
-                                                cause) {},
+                                            onSelectionChanged: (TextSelection
+                                                    selection,
+                                                SelectionChangedCause? cause) {
+                                              String selectionText =
+                                                  selection.textInside(
+                                                      data.originalArticle!);
+
+
+                                            },
                                           );
                                         });
-                                      }else if(value ==BookLoadingState.loading){
-                                        return Center(child: CircularProgressIndicator());
-                                      }else if(value == BookLoadingState.error){
-
-
-                                          if(chapter.error!=null){
-                                            return  Column(
-                                              children: [
-                                                Text('${chapter.error}'),
-                                                TextButton(onPressed: (){
-                                                  logic.findBookChapter(index);
-                                                }, child: Text('重新加载'))
-                                              ],
-                                            );
-                                          }else{
-                                            return  Center(child:Text('未知错误'));
-                                          }
-                                      }else{
-                                        return  const SizedBox();
+                                      } else if (value ==
+                                          BookLoadingState.loading) {
+                                        return const Center(
+                                            child: CircularProgressIndicator());
+                                      } else if (value ==
+                                          BookLoadingState.error) {
+                                        if (chapter.error != null) {
+                                          return Column(
+                                            children: [
+                                              Text('${chapter.error}'),
+                                              TextButton(
+                                                  onPressed: () {
+                                                    logic
+                                                        .findBookChapter(index);
+                                                  },
+                                                  child: const Text('重新加载'))
+                                            ],
+                                          );
+                                        } else {
+                                          return const Center(
+                                              child: Text('未知错误'));
+                                        }
+                                      } else {
+                                        return const SizedBox();
                                       }
-
-
-                                    },),
+                                    },
+                                  ),
                                 ],
                               ),
                             );
@@ -200,17 +227,17 @@ class _BookReaderPageState extends State<BookReaderPage> {
             if (b) {
               return Positioned(
                   child: GestureDetector(
-                    onTap: () {
-                      logic.onTapMenu();
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      height: Get.height,
-                      color: Colors.black38,
-                      margin:
+                onTap: () {
+                  logic.onTapMenu();
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: Get.height,
+                  color: Colors.black38,
+                  margin:
                       const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
-                    ),
-                  ));
+                ),
+              ));
             } else {
               return const SizedBox.shrink();
             }
@@ -250,5 +277,3 @@ class _BookReaderPageState extends State<BookReaderPage> {
     });
   }
 }
-
-

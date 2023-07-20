@@ -61,7 +61,6 @@ class CustomTextSelectionControls extends MaterialTextSelectionControls {
                 selection: TextSelection.collapsed(
                     offset: delegate.textEditingValue.selection.baseOffset)),
             SelectionChangedCause.doubleTap);
-
         delegate.hideToolbar();
       },
     );

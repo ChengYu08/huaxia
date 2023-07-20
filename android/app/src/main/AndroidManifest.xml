@@ -8,7 +8,7 @@
         </intent>
     </queries>
     <application
-        android:label="huaxia"
+        android:label="华夏国学"
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
         android:networkSecurityConfig="@xml/network_security_config"

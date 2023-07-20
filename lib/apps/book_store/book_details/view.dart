@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:huaxia/application/tts/tts_app.dart';
-import 'package:huaxia/apps/book_store/book_details/ebook.dart';
 import 'package:huaxia/apps/book_store/book_details/test.dart';
 import 'package:huaxia/apps/book_store/model/Catalogue.dart';
 import 'package:huaxia/config/assets/imgs.dart';
@@ -164,9 +163,7 @@ class BookDetailsPage extends StatelessWidget {
                                           height: 44,
                                           child: OutlinedButton.icon(
                                               onPressed: () {
-                                                final tts = Get.find<TTSApp>();
-                                                tts.showSpeak(logic.book.value,
-                                                    context: context);
+                                                logic.goSpeak(snapshot.data?.data??[],context);
                                               },
                                               icon: Image.asset(
                                                 Imgs.ic_earphone,

@@ -3,25 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:huaxia/application/tts/tts_app.dart';
 import 'package:huaxia/apps/book_store/book_details/book_reader/data/book_chapter.dart';
-import 'package:huaxia/apps/book_store/model/BookList.dart';
-import 'package:huaxia/apps/book_store/model/Catalogue.dart';
+
 import 'package:huaxia/apps/book_store/model/Chapters.dart';
 import 'package:huaxia/config/config.dart';
 import 'package:html/parser.dart' as htmlparser;
 import 'package:html/dom.dart' as dom;
 import 'package:slide_countdown/slide_countdown.dart';
 
-enum LoadingState { suc, loading, error }
+import '../book_reader/data/book_paragraph.dart';
+import '../book_reader/logic.dart';
+
 
 class BookSpeakLogic extends GetxController {
-  final int?  cutterIndex;
+  final int  cutterIndex;
   final List<BookChapter> bookChapter;
   final int bookId;
   final int isJoin;
-  BookSpeakLogic(  {required this.bookChapter,this.cutterIndex,required this.bookId, required this.isJoin});
+  final String title;
+  final String author;
 
-
-  final ValueNotifier<LoadingState> state = ValueNotifier(LoadingState.loading);
+  BookSpeakLogic(  {required this.bookChapter,required this.cutterIndex,required this.title,required this.bookId, required this.isJoin, required this.author});
 
   var index = 0.obs;
 
@@ -37,9 +38,32 @@ class BookSpeakLogic extends GetxController {
   var showBookText = false.obs;
 
   final ScrollController controller = ScrollController();
- 
+
+  RxList<BookChapter> bookChapters =  RxList([]);
+  @override
+  void onInit() {
+    ttsApp = Get.find<TTSApp>();
+    bookChapters.value = bookChapter;
+    index.value = cutterIndex;
+    if(bookChapters.length>=3){
+      List.generate(3, (index) => findBookChapter(index));
+    }
+    ///当前全部播放完成
+    ttsApp.setDownCallback(() {
+      next();
+    });
+
+    ///当前一段播放中的文字
+    ttsApp.setCurrentCallback((int index, String speakText) {
+      Get.log('=当前播放index:$index==speakText:$speakText');
+      if(controller.position.haveDimensions) {
+        double max =  controller.position.maxScrollExtent/ttsApp.playList.length;
+        controller.jumpTo(1);
+        controller.animateTo(max*index, duration: 400.milliseconds, curve: Curves.linear);
+      }
 
     });
+    super.onInit();
   }
 
   @override
@@ -62,6 +86,20 @@ class BookSpeakLogic extends GetxController {
       AppToast.toast(e.message);
       c();
     });
+  }
+
+  void goBook() {
+   ttsApp.colsePages();
+    if (Get.currentRoute != Routers.bookReaderPage && !Get.isRegistered<BookReaderLogic>(tag: '$bookId')) {
+      Get.toNamed(Routers.bookReaderPage, arguments: bookChapters.value, parameters: {
+        'bookId': '$bookId',
+        'title': title,
+        'author': author,
+        'isJoin': '${join.value}',
+        'index': '${index.value}',
+      });
+    }
+
   }
   timeSetting(){
     Get.bottomSheet(
@@ -130,6 +168,7 @@ class BookSpeakLogic extends GetxController {
         ),
         backgroundColor: Colors.white);
   }
+
   voiceSetting() {
     Get.bottomSheet(
         ValueListenableBuilder(
@@ -294,63 +333,67 @@ class BookSpeakLogic extends GetxController {
   }
 
   Future pause() async {
-    state.value = LoadingState.loading;
-    final d = await ttsApp.pause();
-    if (d == 1) {
-      state.value = LoadingState.suc;
-    } else {
-      state.value = LoadingState.error;
-    }
-  }
-  Future<List<dom.Element>> spText()async{
-    try{
-      if (speakMap.containsKey(index.value)) {
-        final  speak = speakMap[index.value];
-        if (speak != null && speak.isNotEmpty) {
-          return speak;
-        } else {
-          final data =await getCatalogues();
-          if(data.success){
-            final  speakText = _asyncMap(data.data?.cont ?? '');
-            return speakText;
-          }else{
-            return [];
-          }
-        }
-      } else {
-        final data = await getCatalogues();
-        if(data.success){
-          final  speakText = _asyncMap(data.data?.cont ?? '');
-          return speakText;
-        }else{
-          return [];
-        }
-      }
-    }catch(e){
-      return [];
-    }
 
+    final d = await ttsApp.pause();
+    return d;
   }
+
   play() async {
-    state.value = LoadingState.loading;
-    final speakText =await spText().catchError((e){
-      state.value = LoadingState.error;
+    final speakText =await findBookChapter(index.value).catchError((e){
       AppToast.toast('${e.message}');
     });
-      if(speakText.isNotEmpty){
-        state.value = LoadingState.suc;
-        ttsApp.playList = speakText.map((e) => e.text).toList();
+      if(speakText.bookParagraph!=null){
+        List<String>  textList= speakText.bookParagraph!.originalArticleElement.body?.children.map((e) => e.text).toList()??[];
+        ttsApp.playList = textList;
         await ttsApp.speak();
-      }else{
-        state.value = LoadingState.suc;
       }
   }
 
-  Future<ApiResult<Chapters>> getCatalogues() {
-    final data = Api.book_Chapters(
-        bookId: book.value.bookId!,
-        chaptersId: catalogues[index.value].bookCatalogueId!);
-    return data;
+
+
+  Future<BookChapter>   findBookChapter(int index) async{
+    BookChapter chapter= bookChapter[index];
+    try{
+      if (chapter.bookParagraph==null) {
+        final paragraph = await addBookChapters(chapter);
+        if(paragraph!=null){
+          chapter.bookParagraph = paragraph;
+        }
+      }
+      return chapter;
+    }catch( e){
+      final error = e as ApiResult;
+      chapter.error = error.message;
+      chapter.bookLoadingState.value = BookLoadingState.error;
+      return  chapter;
+    }
+  }
+
+  Future<BookParagraph? > addBookChapters(BookChapter  bookChapter) async {
+    bookChapter.bookLoadingState.value = BookLoadingState.loading;
+    try{
+      final chapter=  await Api.book_Chapters(bookId: bookId, chaptersId: bookChapter.paragraphId);
+      if(chapter.success){
+        BookParagraph bookParagraph = BookParagraph(paragraphId: bookChapter.paragraphId,
+            originalArticle: chapter.data!.cont,
+            translationArticle: chapter.data!.translation,
+            explinArticle: chapter.data!.chapters
+        );
+
+        bookChapter.bookLoadingState.value = BookLoadingState.success;
+        return bookParagraph;
+      }else{
+        bookChapter.error = chapter.message;
+        bookChapter.bookLoadingState.value = BookLoadingState.error;
+        return null;
+      }
+    }catch(e){
+      final error = e as ApiResult;
+      bookChapter.error = error.message;
+      bookChapter.bookLoadingState.value = BookLoadingState.error;
+      return null;
+    }
+
   }
 
 

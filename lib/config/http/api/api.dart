@@ -1,7 +1,10 @@
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:get/get.dart';
 import 'package:huaxia/apps/book_store/model/BookList.dart';
 import 'package:huaxia/apps/book_store/model/Catalogue.dart';
 import 'package:huaxia/apps/book_store/model/Chapters.dart';
+import 'package:huaxia/apps/book_store/model/ShelfBook.dart';
+import 'package:huaxia/apps/book_store/my_book_logic.dart';
 import 'package:huaxia/apps/login/model/user_model.dart';
 import 'package:huaxia/config/http/api/api_url.dart';
 import '../api_service.dart';
@@ -13,44 +16,88 @@ T? asT<T>(dynamic value) {
   return null;
 }
 
-class Api{
-
-
-  static Future<ApiResult<UserModel>> wechat_login(String code){
-    return ApiService.getInstance().post(ApiUrl.wechat_login,data:{
-          "code":code
-    },dataParser: (v){
+class Api {
+  static Future<ApiResult<UserModel>> wechat_login(String code) {
+    return ApiService.getInstance()
+        .post(ApiUrl.wechat_login, data: {"code": code}, dataParser: (v) {
       return UserModel.fromJson(v);
     });
   }
-  static Future<ApiResult> book_shelf_add(String bookId){
-    return ApiService.getInstance().post(ApiUrl.book_shelf_add,data:{
-          "bookId":bookId
+
+  static Future<ApiResult> book_shelf_add(String bookId) {
+    return ApiService.getInstance()
+        .post(ApiUrl.book_shelf_add, data: {"bookId": bookId}).then((value) {
+          if(value.success){
+            if(Get.isRegistered<MyBookLogic>()){
+              Get.find<MyBookLogic>().update();
+            }
+          }
+          return value;
     });
   }
 
-  static Future<ApiResult<List<BookList>>> book_list(String typeId){
-    return ApiService.getInstance().post(ApiUrl.book_list,data: {
-          'type':typeId},dataParser: (v){
+  static Future<ApiResult> book_delineate_add({
+    required int bookId,
+    required int bookChaptersInfoId,
+    Map<String, dynamic>? expand,
+  }) {
+    return ApiService.getInstance().post(ApiUrl.book_delineate_add, data: {
+      "bookId": bookId,
+      "bookChaptersInfoId": bookChaptersInfoId,
+      "expand": expand,
+    });
+  }
+
+  static Future<ApiResult> book_shelf_delete({
+    required String ids,
+  }) {
+    return ApiService.getInstance().delete(ApiUrl.book_shelf_delete+ids,);
+  }
+
+  static Future<ApiResult<List<BookList>>> book_list(String typeId) {
+    return ApiService.getInstance()
+        .post(ApiUrl.book_list, data: {'type': typeId}, dataParser: (v) {
       return _bookList(v);
     });
+  }  static Future<ApiResult<List<ShelfBook>>> book_shelf() {
+    return ApiService.getInstance()
+        .get(ApiUrl.book_shelf, dataParser: (v) {
+      return _shelfBook(v);
+    });
   }
 
-  static Future<ApiResult<List<Catalogue>>> book_Catalogue(int id){
-    return ApiService.getInstance().get(ApiUrl.book_catalogue('$id',),cachePolicy: CachePolicy.refresh,dataParser: (v){
+  static Future<ApiResult<List<Catalogue>>> book_Catalogue(int id) {
+    return ApiService.getInstance().get(
+        ApiUrl.book_catalogue(
+          '$id',
+        ),
+        cachePolicy: CachePolicy.request, dataParser: (v) {
       return _bookCatalogue(v);
     });
   }
 
-  static Future<ApiResult<Chapters>> book_Chapters({required int bookId,required int  chaptersId}){
-    return ApiService.getInstance().get(ApiUrl.chapters(bookId: bookId,chaptersId: chaptersId),cachePolicy: CachePolicy.refresh,dataParser: (v){
+  static Future<ApiResult<BookList>> book_info(int id) {
+    return ApiService.getInstance().get(
+        ApiUrl.book_info(
+          '$id',
+        ),
+        cachePolicy: CachePolicy.request, dataParser: (v) {
+      return  BookList.fromJson(v);
+    });
+  }
+
+  static Future<ApiResult<Chapters>> book_Chapters(
+      {required int bookId, required int chaptersId}) {
+    return ApiService.getInstance().get(
+        ApiUrl.chapters(bookId: bookId, chaptersId: chaptersId),
+        cachePolicy: CachePolicy.forceCache, dataParser: (v) {
       return Chapters.fromJson(v);
     });
   }
 
   static List<BookList> _bookList(v) {
     final List<BookList> data = [];
-    if(v!=null && v is List){
+    if (v != null && v is List) {
       for (final dynamic item in v) {
         if (item != null) {
           data.add(BookList.fromJson(asT<Map<String, dynamic>>(item)!));
@@ -59,9 +106,21 @@ class Api{
     }
     return data;
   }
+  static List<ShelfBook> _shelfBook(v) {
+    final List<ShelfBook> data = [];
+    if (v != null && v is List) {
+      for (final dynamic item in v) {
+        if (item != null) {
+          data.add(ShelfBook.fromJson(asT<Map<String, dynamic>>(item)!));
+        }
+      }
+    }
+    return data;
+  }
+
   static List<Catalogue> _bookCatalogue(v) {
     final List<Catalogue> data = [];
-    if(v!=null && v is List){
+    if (v != null && v is List) {
       for (final dynamic item in v) {
         if (item != null) {
           data.add(Catalogue.fromJson(asT<Map<String, dynamic>>(item)!));

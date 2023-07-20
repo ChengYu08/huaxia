@@ -204,8 +204,7 @@ class _EpubViewState extends State<EpubView> {
           paragraph != null ? _chapters[paragraph.chapterIndex] : null;
 
       if (chapter != null && paragraph != null) {
-        final paragraphIndex =
-            _epubCfiReader?.getParagraphIndexByElement(paragraph.element);
+        final paragraphIndex = _epubCfiReader?.getParagraphIndexByElement(paragraph.element);
         final cfi = _epubCfiReader?.generateCfi(
           book: _controller._document,
           chapter: chapter,
