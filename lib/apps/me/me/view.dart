@@ -41,7 +41,6 @@ class MePage extends StatelessWidget {
                   stream: loginIc.userStream,
                   initialData: loginIc.initUserModel,
                   builder: (context, snapshot) {
-
                     return Column(
                       children: [
                         const SizedBox(
@@ -139,7 +138,9 @@ class MePage extends StatelessWidget {
                           ],
                         ),
                         ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.toNamed(Routers.vipPage);
+                            },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color((0xff221F20))),
                             child: const Text(

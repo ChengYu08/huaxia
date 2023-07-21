@@ -7,6 +7,7 @@ class ImgNet{
     double? width,
     double? height,
     BoxFit? fit,
+    BoxBorder? border,
     BoxShape? boxShape
   }){
    return ExtendedImage.network(
@@ -16,6 +17,7 @@ class ImgNet{
       fit: fit,
       cache: true,
       shape: boxShape,
+      border:border ,
       printError: true,
       loadStateChanged: (ExtendedImageState state) {
         switch (state.extendedImageLoadState) {

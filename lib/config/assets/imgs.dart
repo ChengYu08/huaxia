@@ -72,6 +72,12 @@ class Imgs{
   static final String ic_pause =getPath('ic_pause');
   static final String ic_voice =getPath('ic_voice');
   static final String ic_listen =getPath('ic_listen');
+  static final String ic_wx =getPath('ic_wx');
+  static final String ic_zfb =getPath('ic_zfb');
+  static final String bg_intr_1 =getPath('bg_intr_1');
+  static final String bg_intr_3 =getPath('bg_intr_3');
+  static final String bg_intr_4 =getPath('bg_intr_4');
+  static final String bg_vip_intr =getPath('bg_vip_intr');
 
 
 
