@@ -19,4 +19,5 @@ class WeChatConfig{
       state: 'auth',
     );
   }
+
 }

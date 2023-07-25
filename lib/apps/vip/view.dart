@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:huaxia/apps/login/logic.dart';
 import 'package:huaxia/apps/login/model/user_model.dart';
+import 'package:huaxia/apps/vip/model/VIPList.dart';
 import 'package:huaxia/config/config.dart';
+import 'package:huaxia/config/http/async_builder/async_builder.dart';
 
 import 'logic.dart';
 
@@ -72,7 +74,7 @@ class VipPage extends StatelessWidget {
                     IconButton(
                         onPressed: () async {
                           ClipboardData data =
-                              const ClipboardData(text: 'hxgxapp');
+                          const ClipboardData(text: 'hxgxapp');
                           Clipboard.setData(data);
                           AppToast.toast('已复制：hxgxapp');
                         },
@@ -101,51 +103,59 @@ class VipPage extends StatelessWidget {
   Container buildPay() {
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.only(left: 16,top: 14,bottom: 14),
+      padding: const EdgeInsets.only(left: 16, top: 14, bottom: 14),
       child: Row(
         children: [
           Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              RichText(
-                  text: TextSpan(
-                      text: '￥',
-                      style: Get.textTheme.bodySmall,
-                      children: [
-                    TextSpan(
-                      text: logic
-                          .inVip[logic.selectVipPrice.value]!.currendPrice
-                          .toStringAsFixed(1),
-                      style: Get.textTheme.bodySmall!.copyWith(
-                        fontSize: 24,
-                      ),
-                    )
-                  ])),
+              AsyncBuilder(
+                  future: logic.vip_list,
+                  builder: (context, snapshot) {
+                    return Obx(() {
+                      return RichText(
+                          text: TextSpan(
+                              text: '￥',
+                              style: Get.textTheme.bodySmall,
+                              children: [
+                                TextSpan(
+                                  text: '${snapshot?.data?.firstWhere((
+                                      element) =>
+                                  element.vipTypeId ==
+                                      logic.selectVipPriceID.value).price}',
+                                  style: Get.textTheme.bodySmall!.copyWith(
+                                    fontSize: 24,
+                                  ),
+                                )
+                              ]));
+                    });
+                  }
+              ),
               RichText(
                   text: const TextSpan(
                       text: '支付即同意',
                       style:
-                          TextStyle(color: Color(0xff83888F), fontSize: 10),
+                      TextStyle(color: Color(0xff83888F), fontSize: 10),
                       children: [
-                    TextSpan(
-                      text: '《会员协议》',
-                      style:
+                        TextSpan(
+                          text: '《会员协议》',
+                          style:
                           TextStyle(color: Color(0xff202329), fontSize: 10),
-                    ),
-                    TextSpan(
-                      text: '《自动续费协议》',
-                      style:
+                        ),
+                        TextSpan(
+                          text: '《自动续费协议》',
+                          style:
                           TextStyle(color: Color(0xff202329), fontSize: 10),
-                    ),
-                  ])),
+                        ),
+                      ])),
             ],
           ),
           const SizedBox(
             width: 12,
           ),
           ElevatedButton(
-              onPressed: () {},
+              onPressed: logic.pay,
               style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xff3F3735)),
               child: const Text(
@@ -214,71 +224,24 @@ class VipPage extends StatelessWidget {
     );
   }
 
-  Obx buildSelectVipType() {
-    return Obx(() {
-      return Row(
-        children: [
-          Expanded(child: buildVip(0, logic.selectVipPrice.value)),
-          const SizedBox(
-            width: 12,
-          ),
-          Expanded(child: buildVip(1, logic.selectVipPrice.value)),
-          const SizedBox(
-            width: 12,
-          ),
-          Expanded(child: buildVip(2, logic.selectVipPrice.value)),
-        ],
-      );
-    });
+  Widget buildSelectVipType() {
+    return AsyncBuilder(
+        future: logic.vip_list,
+        builder: (context, snapshot) {
+          return Obx(() {
+            return Row(
+                children: snapshot!.data!.map((e) =>
+                    Expanded(child: buildVip(e))).toList()
+            );
+          });
+        }
+    );
   }
 
   Obx buildPayType() {
     return Obx(() {
       return Row(
         children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: () {
-                logic.selectPayType.value = 0;
-              },
-              child: Container(
-                padding: const EdgeInsets.only(
-                    top: 18, bottom: 18, left: 8, right: 8),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12)),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      Imgs.ic_wx,
-                      width: 24,
-                      height: 24,
-                    ),
-                    Text(
-                      '微信支付',
-                      style: Get.textTheme.bodySmall,
-                    ),
-                    const Spacer(),
-                    if (logic.selectPayType.value == 0)
-                      ImageIcon(
-                        AssetImage(Imgs.ic_check),
-                        size: 24,
-                        color: Get.theme.primaryColor,
-                      )
-                    else
-                      Icon(
-                        Icons.radio_button_off_sharp,
-                        size: 24,
-                        color: Get.theme.scaffoldBackgroundColor,
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(
-            width: 12,
-          ),
           Expanded(
             child: GestureDetector(
               onTap: () {
@@ -293,12 +256,13 @@ class VipPage extends StatelessWidget {
                 child: Row(
                   children: [
                     Image.asset(
-                      Imgs.ic_zfb,
+                      Imgs.ic_wx,
                       width: 24,
                       height: 24,
                     ),
+                    const SizedBox(width: 3,),
                     Text(
-                      '支付宝支付',
+                      '微信支付',
                       style: Get.textTheme.bodySmall,
                     ),
                     const Spacer(),
@@ -319,78 +283,126 @@ class VipPage extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(
+            width: 12,
+          ),
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                logic.selectPayType.value = 2;
+              },
+              child: Container(
+                padding: const EdgeInsets.only(
+                    top: 18, bottom: 18, left: 8, right: 8),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12)),
+                child: Row(
+                  children: [
+                    Image.asset(
+                      Imgs.ic_zfb,
+                      width: 24,
+                      height: 24,
+                    ),
+                    const SizedBox(width: 3,),
+                    Text(
+                      '支付宝支付',
+                      style: Get.textTheme.bodySmall,
+                    ),
+                    const Spacer(),
+                    if (logic.selectPayType.value == 2)
+                      ImageIcon(
+                        AssetImage(Imgs.ic_check),
+                        size: 24,
+                        color: Get.theme.primaryColor,
+                      )
+                    else
+                      Icon(
+                        Icons.radio_button_off_sharp,
+                        size: 24,
+                        color: Get.theme.scaffoldBackgroundColor,
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       );
     });
   }
 
-  Widget buildVip(int value, int selectVipPrice) {
-    final v = logic.inVip[value]!;
-    final selectCurrent = selectVipPrice == value;
-    return GestureDetector(
-      onTap: () {
-        logic.selectVipPrice.value = value;
-      },
-      child: Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            color: selectCurrent ? const Color(0xffFDF9EE) : Colors.white,
-            border: selectCurrent
-                ? Border.all(color: const Color(0xffF0C58E), width: 1)
-                : null),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            Text(
-              v.title,
-              style: TextStyle(color: Color(0xff83888F), fontSize: 14),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: RichText(
-                  text: TextSpan(
-                      text: '￥',
-                      style:
-                          Get.textTheme.displayMedium!.copyWith(fontSize: 14),
-                      children: [
-                    TextSpan(
-                        text: v.currendPrice.toStringAsFixed(1),
-                        style: Get.textTheme.displayMedium)
-                  ])),
-            ),
-            Text(
-              '原价￥${v.orgPrice.toStringAsFixed(1)}',
-              style: TextStyle(
-                  color: Color(0xffC2C6CE),
-                  decoration: TextDecoration.lineThrough,
-                  decorationStyle: TextDecorationStyle.solid,
-                  decorationThickness: 2,
-                  height: 2,
-                  textBaseline: TextBaseline.ideographic,
-                  fontSize: 14),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 11),
-              decoration: BoxDecoration(
-                color: selectCurrent ? Color(0xffF9E5CA) : Color(0xffF4F5F7),
-                borderRadius: BorderRadius.circular(12),
+  Widget buildVip(VIPList vipList) {
+    final selectCurrent = vipList.vipTypeId == logic.selectVipPriceID.value;
+    return Padding(
+      padding: const EdgeInsets.only(left: 6, right: 6),
+      child: GestureDetector(
+        onTap: () {
+          logic.selectVipPriceID.value = vipList.vipTypeId!;
+        },
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              color: selectCurrent ? const Color(0xffFDF9EE) : Colors.white,
+              border: selectCurrent
+                  ? Border.all(color: const Color(0xffF0C58E), width: 1)
+                  : null),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const SizedBox(
+                height: 20,
               ),
-              child: Text(
-                v.vipLongStr,
-                style: Get.textTheme.displayMedium!
-                    .copyWith(fontSize: 12, fontWeight: FontWeight.w400),
+              Text(
+                vipList.title ?? '--',
+                style: TextStyle(color: Color(0xff83888F), fontSize: 14),
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: RichText(
+                    text: TextSpan(
+                        text: '￥',
+                        style:
+                        Get.textTheme.displayMedium!.copyWith(fontSize: 14),
+                        children: [
+                          TextSpan(
+                              text: '${vipList.price ?? 0}',
+                              style: Get.textTheme.displayMedium)
+                        ])),
+              ),
+              Text(
+                '原价￥${vipList.oldPrice ?? 0}',
+                style: TextStyle(
+                    color:selectCurrent?Color(0xff787369 ): Color(0xffC2C6CE),
+                    decoration: TextDecoration.lineThrough,
+                    decorationColor:selectCurrent?Color(0xff787369 ): Color(0xffC2C6CE),
+                    decorationStyle: TextDecorationStyle.solid,
+                    decorationThickness: 3,
+                    height: 2,
+                    textBaseline: TextBaseline.ideographic,
+                    fontSize: 14),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 3, horizontal: 11),
+                decoration: BoxDecoration(
+                  color: selectCurrent ? Color(0xffF9E5CA) : Color(0xffF4F5F7),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  vipList.validStr ?? '--',
+                  style: Get.textTheme.displayMedium!
+                      .copyWith(fontSize: 12, fontWeight: FontWeight.w400),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+            ],
+          ),
         ),
       ),
     );

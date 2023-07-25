@@ -60,6 +60,7 @@ dependencies:
   home_widget: ^0.2.1
   flutter_tts: ^3.7.0
   slide_countdown: ^0.6.0
+  rxdart: ^0.27.7
 #  html: ^0.15.4
 dev_dependencies:
   flutter_test:
@@ -71,6 +72,7 @@ dev_dependencies:
   flutter_math_fork: any
   collection: any
   numerus: any
+
   text_composition:
     git:
       url: https://gitee.com/jason_xuj/text_composition.git

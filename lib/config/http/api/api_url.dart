@@ -44,4 +44,10 @@ class ApiUrl{
 
   ///新增划线
   static const  book_delineate_add = '/guoxue/app/book/delineate/add';
+
+  ///VIP列表
+  static const  vip_list = '/guoxue/app/vip/type/list';
+
+  ///开通vip（预下单
+  static const  vip_order_add = '/guoxue/app/vip/order/add';
 }

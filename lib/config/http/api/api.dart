@@ -6,6 +6,7 @@ import 'package:huaxia/apps/book_store/model/Chapters.dart';
 import 'package:huaxia/apps/book_store/model/ShelfBook.dart';
 import 'package:huaxia/apps/book_store/my_book_logic.dart';
 import 'package:huaxia/apps/login/model/user_model.dart';
+import 'package:huaxia/apps/vip/model/VIPList.dart';
 import 'package:huaxia/config/http/api/api_url.dart';
 import '../api_service.dart';
 
@@ -27,12 +28,12 @@ class Api {
   static Future<ApiResult> book_shelf_add(String bookId) {
     return ApiService.getInstance()
         .post(ApiUrl.book_shelf_add, data: {"bookId": bookId}).then((value) {
-          if(value.success){
-            if(Get.isRegistered<MyBookLogic>()){
-              Get.find<MyBookLogic>().update();
-            }
-          }
-          return value;
+      if (value.success) {
+        if (Get.isRegistered<MyBookLogic>()) {
+          Get.find<MyBookLogic>().update();
+        }
+      }
+      return value;
     });
   }
 
@@ -51,7 +52,9 @@ class Api {
   static Future<ApiResult> book_shelf_delete({
     required String ids,
   }) {
-    return ApiService.getInstance().delete(ApiUrl.book_shelf_delete+ids,);
+    return ApiService.getInstance().delete(
+      ApiUrl.book_shelf_delete + ids,
+    );
   }
 
   static Future<ApiResult<List<BookList>>> book_list(String typeId) {
@@ -59,11 +62,24 @@ class Api {
         .post(ApiUrl.book_list, data: {'type': typeId}, dataParser: (v) {
       return _bookList(v);
     });
-  }  static Future<ApiResult<List<ShelfBook>>> book_shelf() {
-    return ApiService.getInstance()
-        .get(ApiUrl.book_shelf, dataParser: (v) {
+  }
+
+  static Future<ApiResult<List<ShelfBook>>> book_shelf() {
+    return ApiService.getInstance().get(ApiUrl.book_shelf, dataParser: (v) {
       return _shelfBook(v);
     });
+  }
+
+  static Future<ApiResult<List<VIPList>>> vip_list() {
+    return ApiService.getInstance().post(ApiUrl.vip_list, dataParser: (v) {
+      return _vip_list(v);
+    });
+  }
+
+  static Future<ApiResult> vip_order_add(
+      {required int vipTypeId, required int payType}) {
+    return ApiService.getInstance().post(ApiUrl.vip_order_add,
+        data: {"vipTypeId": vipTypeId, "payType": payType});
   }
 
   static Future<ApiResult<List<Catalogue>>> book_Catalogue(int id) {
@@ -82,7 +98,7 @@ class Api {
           '$id',
         ),
         cachePolicy: CachePolicy.request, dataParser: (v) {
-      return  BookList.fromJson(v);
+      return BookList.fromJson(v);
     });
   }
 
@@ -106,12 +122,25 @@ class Api {
     }
     return data;
   }
+
   static List<ShelfBook> _shelfBook(v) {
     final List<ShelfBook> data = [];
     if (v != null && v is List) {
       for (final dynamic item in v) {
         if (item != null) {
           data.add(ShelfBook.fromJson(asT<Map<String, dynamic>>(item)!));
+        }
+      }
+    }
+    return data;
+  }
+
+  static List<VIPList> _vip_list(v) {
+    final List<VIPList> data = [];
+    if (v != null && v is List) {
+      for (final dynamic item in v) {
+        if (item != null) {
+          data.add(VIPList.fromJson(asT<Map<String, dynamic>>(item)!));
         }
       }
     }

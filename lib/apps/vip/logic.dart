@@ -1,9 +1,12 @@
 import 'package:get/get.dart';
+import 'package:huaxia/config/config.dart';
+
+import 'model/VIPList.dart';
 
 class VipLogic extends GetxController {
-  var selectVipPrice = 0.obs;
+  var selectVipPriceID = (-1).obs;
 
-  var selectPayType = 0.obs;
+  var selectPayType = 1.obs;
 
   final Map<int,VipModel> inVip ={
       0:VipModel(
@@ -25,8 +28,32 @@ class VipLogic extends GetxController {
       vipTimeLong: -1,
     ),
   };
+late  Future<ApiResult<List<VIPList>>> vip_list;
+  @override
+  void onInit() {
+    vip_list = Api.vip_list().then((value) {
+      selectVipPriceID.value = value.data!.first.vipTypeId!;
+      return value;
+    });
+    super.onInit();
+  }
+  pay()async{
+    final c = AppLoading.loading();
+    try{
 
+    final add= await  Api.vip_order_add(vipTypeId: selectVipPriceID.value,
+          payType: selectPayType.value);
+    c();
+    }catch (e){
+      c();
+      if(e is ApiResult){
+        AppToast.toast(e.message);
+      }else{
+        AppToast.toast('$e');
+      }
+    }
 
+  }
 }
 
 class VipModel{
