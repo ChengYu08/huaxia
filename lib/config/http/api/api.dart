@@ -8,6 +8,7 @@ import 'package:huaxia/apps/book_store/my_book_logic.dart';
 import 'package:huaxia/apps/login/model/user_model.dart';
 import 'package:huaxia/apps/vip/model/VIPList.dart';
 import 'package:huaxia/config/http/api/api_url.dart';
+import '../../../apps/vip/model/VipPay.dart';
 import '../api_service.dart';
 
 T? asT<T>(dynamic value) {
@@ -18,10 +19,16 @@ T? asT<T>(dynamic value) {
 }
 
 class Api {
+
   static Future<ApiResult<UserModel>> wechat_login(String code) {
     return ApiService.getInstance()
         .post(ApiUrl.wechat_login, data: {"code": code}, dataParser: (v) {
       return UserModel.fromJson(v);
+    });
+  }
+  static Future<ApiResult<User>> user_info() {
+    return ApiService.getInstance().get(ApiUrl.user_info, dataParser: (v) {
+      return User.fromJson(v);
     });
   }
 
@@ -76,10 +83,12 @@ class Api {
     });
   }
 
-  static Future<ApiResult> vip_order_add(
+  static Future<ApiResult<VipPay>> vip_order_add(
       {required int vipTypeId, required int payType}) {
     return ApiService.getInstance().post(ApiUrl.vip_order_add,
-        data: {"vipTypeId": vipTypeId, "payType": payType});
+        data: {"vipTypeId": vipTypeId, "payType": payType}, dataParser: (v) {
+      return VipPay.fromJson(v);
+    });
   }
 
   static Future<ApiResult<List<Catalogue>>> book_Catalogue(int id) {

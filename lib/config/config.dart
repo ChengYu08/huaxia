@@ -9,7 +9,10 @@ export 'homeWidget/app_widget.dart';
 export 'http/api/api.dart';
 export 'http/api/api_url.dart';
 export 'http/api_service.dart';
+export 'http/async_builder/async_builder.dart';
+
 const appPath = AppPath.RELEASE;
+
 enum AppPath{
   RELEASE,
   DEBUG,

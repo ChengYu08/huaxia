@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:huaxia/application/tts/tts_app.dart';
 import 'package:huaxia/apps/book_store/model/BookList.dart';
+import 'package:huaxia/apps/book_store/my_book_logic.dart';
 
 import '../../../config/config.dart';
 import '../model/Catalogue.dart';
@@ -52,6 +53,8 @@ class BookDetailsLogic extends GetxController {
       c();
       if(value.success){
         AppToast.toast('加入成功');
+        final myBook = Get.find<MyBookLogic>();
+        myBook.getData();
         book.update((val) {
           val?.isJoin = 1;
         });

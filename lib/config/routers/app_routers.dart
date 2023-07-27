@@ -17,6 +17,7 @@ import 'package:huaxia/apps/me/me/binding.dart';
 import 'package:huaxia/apps/me/me/sentence/binding.dart';
 import 'package:huaxia/apps/me/me/sentence/view.dart';
 import 'package:huaxia/apps/me/me/view.dart';
+import 'package:huaxia/apps/me/setting/binding.dart';
 
 import 'package:huaxia/apps/screen/view.dart';
 import 'package:huaxia/apps/vip/binding.dart';
@@ -28,6 +29,7 @@ import '../../apps/book_store/book_search/binding.dart';
 import '../../apps/home/binding.dart';
 import '../../apps/home_sentence/add_sentence/binding.dart';
 import '../../apps/home_sentence/add_sentence/view.dart';
+import '../../apps/me/setting/view.dart';
 
 class Routers{
   Routers._();
@@ -46,6 +48,7 @@ class Routers{
 
   static const me = '/MePage';
   static const sentencePage = '/MePage/SentencePage';
+  static const settingPage = '/MePage/SettingPage';
   static const vipPage = '/VipPage';
 }
 class AppRouters{
@@ -110,5 +113,9 @@ class AppRouters{
         name: Routers.sentencePage,
         page: ()=>SentencePage(),
         binding: SentenceBinding()),
+    GetPage(
+        name: Routers.settingPage,
+        page: ()=>SettingPage(),
+        binding: SettingBinding()),
   ];
 }

@@ -50,4 +50,8 @@ class ApiUrl{
 
   ///开通vip（预下单
   static const  vip_order_add = '/guoxue/app/vip/order/add';
+
+  ///我的信息(刷新使用)
+  static const  user_info = '  /guoxue/app/user/info';
+
 }

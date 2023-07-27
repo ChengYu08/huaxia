@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:huaxia/apps/book_store/book_details/book_reader/data/book_paragraph.dart';
 import 'package:huaxia/apps/book_store/model/Catalogue.dart';
 import 'package:huaxia/apps/book_store/model/Chapters.dart';
+import 'package:huaxia/apps/book_store/model/ShelfBook.dart';
+import 'package:huaxia/apps/book_store/my_book_logic.dart';
 import 'package:huaxia/config/config.dart';
 import 'package:huaxia/widgets/custom_selectable_text/custom_selectable_text.dart';
 import 'package:screen_brightness/screen_brightness.dart';
@@ -146,6 +148,8 @@ class BookReaderLogic extends GetxController {
       c();
       if (value.success) {
         AppToast.toast('加入成功');
+        final myBook = Get.find<MyBookLogic>();
+        myBook.getData();
         isJoin.value = 1;
       } else {
         AppToast.toast(value.message);

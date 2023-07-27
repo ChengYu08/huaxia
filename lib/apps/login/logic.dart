@@ -30,6 +30,8 @@ class LoginLogic extends GetxService {
 
    Stream<UserModel> get  userStream=>_userStream.stream;
   UserModel? get  initUserModel =>userBox.get(loginBox);
+
+
   @override
   void onInit() {
     _userStream.add(UserModel.un());
@@ -79,6 +81,16 @@ class LoginLogic extends GetxService {
       );
     }
   }
+  ///刷新用户状态
+  Future<User?> reUser(){
+   return  Api.user_info().then((value) {
+
+        if(value.success){
+          _saveUser(initUserModel!.copy(value.data!));
+        }
+      return value.data;
+    });
+  }
 
   @override
   void onClose() {
@@ -122,11 +134,10 @@ class LoginLogic extends GetxService {
     userBox.put(loginBox, userModel);
   }
 
-  cleanUser() {
-    userBox.delete(loginBox);
+   cleanUser()async {
+ await  userBox.delete(loginBox);
     loginState.value = LoginState.notAuthenticated;
     _userStream.add(UserModel.un());
-
   }
 }
 

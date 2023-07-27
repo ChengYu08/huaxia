@@ -1,5 +1,10 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
+import 'package:huaxia/apps/login/logic.dart';
 import 'package:huaxia/config/config.dart';
+import 'package:huaxia/config/wechat/wechat.dart';
+import 'package:wechat_kit/wechat_kit.dart';
 
 import 'model/VIPList.dart';
 
@@ -8,27 +13,11 @@ class VipLogic extends GetxController {
 
   var selectPayType = 1.obs;
 
-  final Map<int,VipModel> inVip ={
-      0:VipModel(
-        title: '连续包月',
-        orgPrice: 11.5,
-        currendPrice: 6.0,
-        vipTimeLong: 30,
-      ),
-    1:VipModel(
-      title: '包年会员',
-      orgPrice: 120.5,
-      currendPrice: 50.0,
-      vipTimeLong: 360,
-    ),
-    2:VipModel(
-      title: '永久会员',
-      orgPrice: 288,
-      currendPrice: 108,
-      vipTimeLong: -1,
-    ),
-  };
 late  Future<ApiResult<List<VIPList>>> vip_list;
+
+
+  late final StreamSubscription<WechatResp> _respSubs;
+
   @override
   void onInit() {
     vip_list = Api.vip_list().then((value) {
@@ -36,13 +25,16 @@ late  Future<ApiResult<List<VIPList>>> vip_list;
       return value;
     });
     super.onInit();
+
+    _respSubs = WechatKitPlatform.instance.respStream().listen(_listenResp);
+
   }
   pay()async{
     final c = AppLoading.loading();
     try{
-
     final add= await  Api.vip_order_add(vipTypeId: selectVipPriceID.value,
           payType: selectPayType.value);
+    await  WeChatConfig.pay(add.data!);
     c();
     }catch (e){
       c();
@@ -54,24 +46,40 @@ late  Future<ApiResult<List<VIPList>>> vip_list;
     }
 
   }
-}
 
-class VipModel{
-  final String title;
-  final double orgPrice;
-  final double currendPrice;
-  final int vipTimeLong;
+  void _listenResp(WechatResp event) {
+      if(event is WechatPayResp){
+          if(event.isSuccessful){
+            final c = AppLoading.loading(
+              title: '处理中...'
+            );
+          final u = Get.find<LoginLogic>();
+            u.reUser().then((value){
+              c();
+                if(value!=null){
+                if(value.vip==1){
+                  AppToast.toast("开通成功");
+                  if(Get.currentRoute== Routers.vipPage){
+                    Get.back();
+                  }
 
-  String  get vipLongStr{
-      if(vipTimeLong==-1){
-        return '永久有效';
-      }else if(vipTimeLong ==360){
-        return '一年有效';
+                }
+
+                }
+            }).catchError((e){
+              c();
+              AppToast.toast(e);
+            });
+
+
+          }else if(event.isCancelled){///用户主动取消支付
+
+          }else{
+            AppToast.toast("支付错误:${event.errorCode}-${event.errorMsg}");
+          }
       }else{
-        return '一月有效';
+
       }
+
   }
-  VipModel({
-    required this.title, required this.orgPrice, required this.currendPrice, required this.vipTimeLong
-});
 }

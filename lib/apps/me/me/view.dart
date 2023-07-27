@@ -25,7 +25,9 @@ class MePage extends StatelessWidget {
               style: Get.textTheme.titleLarge,
             ),
             centerTitle: false,
-            actions: [IconButton(onPressed: () {}, icon: Icon(Icons.settings))],
+            actions: [IconButton(onPressed: () {
+              Get.toNamed(Routers.settingPage);
+            }, icon: Icon(Icons.settings))],
             expandedHeight: 200,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(

@@ -17,6 +17,7 @@ class AppLoading{
     static loading({
       WrapAnimation? wrapToastAnimation,
       Alignment align = Alignment.center,
+      String? title,
       BackButtonBehavior? backButtonBehavior,
       bool crossPage = true,
       bool clickClose = false,
@@ -28,7 +29,7 @@ class AppLoading{
       Duration? animationReverseDuration,
       Color backgroundColor = Colors.black26,
     }){
-      return  BotToast.showLoading(
+      return  BotToast.showCustomLoading(
         wrapAnimation: wrapToastAnimation,
         align: Alignment.center,
         backButtonBehavior: backButtonBehavior,
@@ -40,8 +41,35 @@ class AppLoading{
         duration: duration,
         animationDuration: animationDuration,
         animationReverseDuration: animationDuration,
-        backgroundColor: backgroundColor
+        backgroundColor: backgroundColor,
+        toastBuilder: (_) => const LoadingWidget(),
       );
 
     }
+}
+
+//加载提示的Widget
+class LoadingWidget extends StatelessWidget {
+  final String? title;
+  const LoadingWidget({Key? key, this.title}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(15),
+      decoration: const BoxDecoration(
+          color: Colors.black54,
+          borderRadius: BorderRadius.all(Radius.circular(8))),
+      child: title==null?const CircularProgressIndicator(
+        backgroundColor: Colors.white,
+      ):Column(
+        children: [
+          const CircularProgressIndicator(
+            backgroundColor: Colors.white,
+          ),
+          Text(title!,)
+        ],
+      )
+    );
+  }
 }

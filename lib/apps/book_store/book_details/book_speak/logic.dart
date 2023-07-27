@@ -5,6 +5,7 @@ import 'package:huaxia/application/tts/tts_app.dart';
 import 'package:huaxia/apps/book_store/book_details/book_reader/data/book_chapter.dart';
 
 import 'package:huaxia/apps/book_store/model/Chapters.dart';
+import 'package:huaxia/apps/book_store/my_book_logic.dart';
 import 'package:huaxia/config/config.dart';
 import 'package:html/parser.dart' as htmlparser;
 import 'package:html/dom.dart' as dom;
@@ -77,6 +78,8 @@ class BookSpeakLogic extends GetxController {
     Api.book_shelf_add('$bookId').then((value) {
       c();
       if (value.success) {
+        final myBook = Get.find<MyBookLogic>();
+        myBook.getData();
         AppToast.toast('加入成功');
         join.value = 1;
       } else {

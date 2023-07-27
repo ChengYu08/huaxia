@@ -25,7 +25,7 @@ class UserModel {
   @HiveField(0)
   final String? userToken;
   @HiveField(1)
-  final User? user;
+   final User? user;
 
   factory UserModel.un(){
     return UserModel(userToken: '-',user: User());
@@ -39,7 +39,12 @@ class UserModel {
     'userToken': userToken,
     'user': user,
   };
-
+  UserModel copy(User u){
+    return UserModel(
+      userToken: userToken,
+      user: u
+    );
+  }
 
 }
 @HiveType(typeId: 4)
@@ -133,6 +138,9 @@ class User {
   final String? subscribeTime;
   @HiveField(21)
   final String? nickName;
+
+
+
 
   @override
   String toString() {
