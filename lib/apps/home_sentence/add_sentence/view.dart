@@ -18,7 +18,9 @@ class AddSentencePage extends StatelessWidget {
       child: SizedBox(
           width: double.infinity,
           height: 44,
-          child: ElevatedButton(onPressed: (){}, child: Text('确定发布'))),
+          child: ElevatedButton(onPressed: (){
+            logic.postSent();
+          }, child: Text('确定发布'))),
     ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 17),
@@ -30,6 +32,7 @@ class AddSentencePage extends StatelessWidget {
           TextField(
             maxLines: 3,
             maxLength: 30,
+            controller: logic.controller1,
             decoration: InputDecoration(
               filled: true,
               hintText: '请认真填写您要分享的句子,否则将不予以展现',
@@ -48,6 +51,7 @@ class AddSentencePage extends StatelessWidget {
           TextField(
             maxLines: 3,
             maxLength: 30,
+            controller: logic.controller2,
             decoration: InputDecoration(
               filled: true,
               hintText: '请认真填写您要分享的句子,否则将不予以展现',
@@ -66,6 +70,7 @@ class AddSentencePage extends StatelessWidget {
           SizedBox(
             height: 41,
             child: TextField(
+              controller: logic.controller3,
               decoration: InputDecoration(
                   filled: true,
                   hintText: '输入书名',
@@ -86,6 +91,7 @@ class AddSentencePage extends StatelessWidget {
           SizedBox(
             height: 41,
             child: TextField(
+              controller: logic.controller4,
               decoration: InputDecoration(
                   filled: true,
                   hintText: '输入书名-章节',

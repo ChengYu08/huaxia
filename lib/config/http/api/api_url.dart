@@ -52,6 +52,16 @@ class ApiUrl{
   static const  vip_order_add = '/guoxue/app/vip/order/add';
 
   ///我的信息(刷新使用)
-  static const  user_info = '  /guoxue/app/user/info';
+  static const  user_info = '/guoxue/app/user/info';
+
+  ///首页 句子 列表
+  static const  entence_list = '/guoxue/app/entence/list';
+
+  ///句子 喜欢或者不喜欢
+  static const  entence_like = '/guoxue/app/entence/like/log/add';
+
+  ///发布句子
+  static const  entence_add = '/guoxue/app/entence/add';
+
 
 }

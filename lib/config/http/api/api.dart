@@ -5,6 +5,7 @@ import 'package:huaxia/apps/book_store/model/Catalogue.dart';
 import 'package:huaxia/apps/book_store/model/Chapters.dart';
 import 'package:huaxia/apps/book_store/model/ShelfBook.dart';
 import 'package:huaxia/apps/book_store/my_book_logic.dart';
+import 'package:huaxia/apps/home_sentence/model/Entence.dart';
 import 'package:huaxia/apps/login/model/user_model.dart';
 import 'package:huaxia/apps/vip/model/VIPList.dart';
 import 'package:huaxia/config/http/api/api_url.dart';
@@ -77,6 +78,33 @@ class Api {
     });
   }
 
+  static Future<ApiResult<List<Entence>>> entence_list() {
+    return ApiService.getInstance().get(ApiUrl.entence_list, dataParser: (v) {
+      return _entences(v);
+    });
+  }
+
+  ///[isLike]是否喜欢(0否，1是)
+  static Future entence_like({required String entenceId,required String isLike }) {
+    return ApiService.getInstance().post(ApiUrl.entence_like,data: {
+      'entenceId':entenceId,
+      'isLike':isLike,
+    });
+  }
+
+  static Future<ApiResult> entence_add({
+    required String sentence,
+    required String interpretation ,
+    required String sourceCont,
+    required String sourceUrl}) {
+    return ApiService.getInstance().post(ApiUrl.entence_add,data: {
+      'sentence':sentence,
+      'interpretation':interpretation,
+      'sourceCont':sourceCont,
+      'sourceUrl':sourceUrl,
+    });
+  }
+
   static Future<ApiResult<List<VIPList>>> vip_list() {
     return ApiService.getInstance().post(ApiUrl.vip_list, dataParser: (v) {
       return _vip_list(v);
@@ -138,6 +166,18 @@ class Api {
       for (final dynamic item in v) {
         if (item != null) {
           data.add(ShelfBook.fromJson(asT<Map<String, dynamic>>(item)!));
+        }
+      }
+    }
+    return data;
+  }
+
+  static List<Entence> _entences(v) {
+    final List<Entence> data = [];
+    if (v != null && v is List) {
+      for (final dynamic item in v) {
+        if (item != null) {
+          data.add(Entence.fromJson(asT<Map<String, dynamic>>(item)!));
         }
       }
     }
