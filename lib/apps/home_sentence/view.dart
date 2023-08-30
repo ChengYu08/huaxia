@@ -281,7 +281,9 @@ class HomeSentencePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+
+                    },
                     child: CircleAvatar(
                       radius: 36,
                       backgroundColor: Colors.white,

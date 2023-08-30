@@ -62,6 +62,8 @@ class Imgs{
   static final String logo =getPath('logo');
   static final String wechat_fill =getPath('wechat_fill');
 
+  static final String bg_share =getPath('bg_share');
+
   static final String bg_start =getPath('bg_start');
   static final String bg_start_text =getPath('bg_start_text');
   static final String ic_speed =getPath('ic_speed');
@@ -78,6 +80,8 @@ class Imgs{
   static final String bg_intr_3 =getPath('bg_intr_3');
   static final String bg_intr_4 =getPath('bg_intr_4');
   static final String bg_vip_intr =getPath('bg_vip_intr');
+  static final String ic_share_wx =getPath('ic_share_wx');
+  static final String ic_share_wx_2 =getPath('ic_share_wx_2');
 
 
 

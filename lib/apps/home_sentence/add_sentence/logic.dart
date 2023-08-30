@@ -47,4 +47,6 @@ class AddSentenceLogic extends GetxController {
       AppToast.toast('${e.message}');
     });
   }
+
+
 }

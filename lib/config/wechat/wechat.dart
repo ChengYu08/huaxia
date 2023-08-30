@@ -29,4 +29,6 @@ class WeChatConfig {
         timeStamp: vipPay.timestamp!,
         sign: vipPay.sign!);
   }
+  share(){
+  }
 }

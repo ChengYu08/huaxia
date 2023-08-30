@@ -20,5 +20,16 @@ class HomeSentenceLogic extends GetxController {
       return Api.entence_like(entenceId: entenceId, isLike: isLike);
   }
 
+  share(){
+      Get.bottomSheet(Column(children: [
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            image: DecorationImage(image: AssetImage(Imgs.bg_share),fit: BoxFit.fill)
+          ),
+        )
+      ],));
+  }
+
 
 }
