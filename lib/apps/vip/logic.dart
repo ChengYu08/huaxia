@@ -13,8 +13,7 @@ class VipLogic extends GetxController {
 
   var selectPayType = 1.obs;
 
-late  Future<ApiResult<List<VIPList>>> vip_list;
-
+  late Future<ApiResult<List<VIPList>>> vip_list;
 
   late final StreamSubscription<WechatResp> _respSubs;
 
@@ -27,59 +26,49 @@ late  Future<ApiResult<List<VIPList>>> vip_list;
     super.onInit();
 
     _respSubs = WechatKitPlatform.instance.respStream().listen(_listenResp);
-
   }
-  pay()async{
+
+  pay() async {
     final c = AppLoading.loading();
-    try{
-    final add= await  Api.vip_order_add(vipTypeId: selectVipPriceID.value,
-          payType: selectPayType.value);
-    await  WeChatConfig.pay(add.data!);
-    c();
-    }catch (e){
+    try {
+      final add = await Api.vip_order_add(
+          vipTypeId: selectVipPriceID.value, payType: selectPayType.value);
+      await WeChatConfig.pay(add.data!);
       c();
-      if(e is ApiResult){
+    } catch (e) {
+      c();
+      if (e is ApiResult) {
         AppToast.toast(e.message);
-      }else{
+      } else {
         AppToast.toast('$e');
       }
     }
-
   }
 
   void _listenResp(WechatResp event) {
-      if(event is WechatPayResp){
-          if(event.isSuccessful){
-            final c = AppLoading.loading(
-              title: '处理中...'
-            );
-          final u = Get.find<LoginLogic>();
-            u.reUser().then((value){
-              c();
-                if(value!=null){
-                if(value.vip==1){
-                  AppToast.toast("开通成功");
-                  if(Get.currentRoute== Routers.vipPage){
-                    Get.back();
-                  }
-
-                }
-
-                }
-            }).catchError((e){
-              c();
-              AppToast.toast(e);
-            });
-
-
-          }else if(event.isCancelled){///用户主动取消支付
-
-          }else{
-            AppToast.toast("支付错误:${event.errorCode}-${event.errorMsg}");
+    if (event is WechatPayResp) {
+      if (event.isSuccessful) {
+        final c = AppLoading.loading(title: '处理中...');
+        final u = Get.find<LoginLogic>();
+        u.reUser().then((value) {
+          c();
+          if (value != null) {
+            if (value.vip == 1) {
+              AppToast.toast("开通成功");
+              if (Get.currentRoute == Routers.vipPage) {
+                Get.back();
+              }
+            }
           }
-      }else{
-
+        }).catchError((e) {
+          c();
+          AppToast.toast(e);
+        });
+      } else if (event.isCancelled) {
+        ///用户主动取消支付
+      } else {
+        AppToast.toast("支付错误:${event.errorCode}-${event.errorMsg}");
       }
-
+    } else {}
   }
 }
