@@ -8,9 +8,7 @@ class InitBinding extends Bindings{
   @override
   void dependencies() {
       Get.put(AppBookConfig());
-
       Get.lazyPut(() => TTSApp());
-      // Get.put( TTSApp());
       Get.put(LoginLogic());
   }
 

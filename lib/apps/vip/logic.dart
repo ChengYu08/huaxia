@@ -19,12 +19,12 @@ class VipLogic extends GetxController {
 
   @override
   void onInit() {
+
     vip_list = Api.vip_list().then((value) {
       selectVipPriceID.value = value.data!.first.vipTypeId!;
       return value;
     });
     super.onInit();
-
     _respSubs = WechatKitPlatform.instance.respStream().listen(_listenResp);
   }
 
@@ -69,6 +69,6 @@ class VipLogic extends GetxController {
       } else {
         AppToast.toast("支付错误:${event.errorCode}-${event.errorMsg}");
       }
-    } else {}
+    }
   }
 }

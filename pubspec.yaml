@@ -61,6 +61,7 @@ dependencies:
   flutter_tts: ^3.7.0
   slide_countdown: ^0.6.0
   rxdart: ^0.27.7
+  flutter_inappwebview: ^5.7.2+3
   permission_handler: ^10.4.3
   image_gallery_saver: ^2.0.3
   flustars_flutter3: ^3.0.0

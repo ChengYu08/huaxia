@@ -10,6 +10,7 @@ export 'http/api/api.dart';
 export 'http/api/api_url.dart';
 export 'http/api_service.dart';
 export 'http/async_builder/async_builder.dart';
+export 'apps/app_config.dart';
 
 const appPath = AppPath.RELEASE;
 

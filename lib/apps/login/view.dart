@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:huaxia/config/assets/imgs.dart';
 import 'package:huaxia/config/config.dart';
 import 'package:huaxia/config/wechat/wechat.dart';
+import 'package:huaxia/widgets/web/web_views.dart';
 import 'package:wechat_kit/wechat_kit.dart';
 
 import 'logic.dart';
@@ -71,6 +72,7 @@ class LoginPage extends StatelessWidget {
                       text: '《会员协议》',
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
+                        Get.to(()=>WebViews(url: AppConfig.privce_url));
                         //todo
                         },
                       style: TextStyle(
@@ -80,7 +82,7 @@ class LoginPage extends StatelessWidget {
                       text: '《自动续费协议》',
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-
+                          Get.to(()=>WebViews(url: AppConfig.service_url));
                         },
                       style: TextStyle(
                           color: Get.theme.primaryColor,height: 2, fontSize: 13)

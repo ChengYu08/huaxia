@@ -143,7 +143,7 @@ class HomeSentencePage extends StatelessWidget {
                                         width: 40,
                                       ),
                                       Text(
-                                        '',
+                                        '${v.sourceCont}',
                                         style: Get.textTheme.bodyMedium!
                                             .copyWith(fontWeight: FontWeight.bold,fontFamily: 'MaShanZheng'),
                                       ),

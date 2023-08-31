@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:huaxia/config/config.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../../../widgets/web/web_views.dart';
+
 class AboutMePage extends StatelessWidget {
   const AboutMePage({Key? key}) : super(key: key);
 
@@ -37,20 +39,30 @@ class AboutMePage extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('用户协议', style: Get.textTheme.bodySmall,),
-                    Icon(Icons.arrow_forward_ios,color: Get.theme.dividerColor,)
-                  ],
+                GestureDetector(
+                  onTap: (){
+                    Get.to(()=>WebViews(url: AppConfig.service_url));
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('用户协议', style: Get.textTheme.bodySmall,),
+                      Icon(Icons.arrow_forward_ios,color: Get.theme.dividerColor,)
+                    ],
+                  ),
                 ),
                 const Divider(thickness: .5,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('隐私政策', style: Get.textTheme.bodySmall,),
-                    Icon(Icons.arrow_forward_ios,color: Get.theme.dividerColor,)
-                  ],
+                GestureDetector(
+                  onTap: (){
+                    Get.to(()=>WebViews(url: AppConfig.privce_url));
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('隐私政策', style: Get.textTheme.bodySmall,),
+                      Icon(Icons.arrow_forward_ios,color: Get.theme.dividerColor,)
+                    ],
+                  ),
                 ),
               ],
             ),
