@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:huaxia/application/tts/tts_app.dart';
 import 'package:huaxia/apps/book_store/model/BookList.dart';
@@ -45,6 +46,19 @@ class BookDetailsLogic extends GetxController {
       'isJoin': '${book.value.isJoin}',
       'index': '0',
     });
+  }
+
+  void openBookMuem( List<Catalogue> data){
+    Get.bottomSheet(
+      ListView.builder(
+      itemCount:data.length,
+    itemBuilder: (_,index){
+        final d = data[index];
+        return ListTile(
+          title:Text(d.firstCatalogue??''),
+        );
+      })
+    );
   }
 
   void addBook() {

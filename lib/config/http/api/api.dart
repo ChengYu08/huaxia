@@ -20,13 +20,13 @@ T? asT<T>(dynamic value) {
 }
 
 class Api {
-
   static Future<ApiResult<UserModel>> wechat_login(String code) {
     return ApiService.getInstance()
         .post(ApiUrl.wechat_login, data: {"code": code}, dataParser: (v) {
       return UserModel.fromJson(v);
     });
   }
+
   static Future<ApiResult<User>> user_info() {
     return ApiService.getInstance().get(ApiUrl.user_info, dataParser: (v) {
       return User.fromJson(v);
@@ -65,9 +65,11 @@ class Api {
     );
   }
 
-  static Future<ApiResult<List<BookList>>> book_list(String typeId) {
-    return ApiService.getInstance()
-        .post(ApiUrl.book_list, data: {'type': typeId}, dataParser: (v) {
+  static Future<ApiResult<List<BookList>>> book_list(String typeId,
+      {int pageNum = 1, int pageSize = 20}) {
+    return ApiService.getInstance().post(ApiUrl.book_list,
+        queryParameters: {'pageNum': pageNum, 'pageSize': pageSize},
+        data: {'type': typeId}, dataParser: (v) {
       return _bookList(v);
     });
   }
@@ -85,23 +87,24 @@ class Api {
   }
 
   ///[isLike]是否喜欢(0否，1是)
-  static Future entence_like({required String entenceId,required String isLike }) {
-    return ApiService.getInstance().post(ApiUrl.entence_like,data: {
-      'entenceId':entenceId,
-      'isLike':isLike,
+  static Future entence_like(
+      {required String entenceId, required String isLike}) {
+    return ApiService.getInstance().post(ApiUrl.entence_like, data: {
+      'entenceId': entenceId,
+      'isLike': isLike,
     });
   }
 
-  static Future<ApiResult> entence_add({
-    required String sentence,
-    required String interpretation ,
-    required String sourceCont,
-    required String sourceUrl}) {
-    return ApiService.getInstance().post(ApiUrl.entence_add,data: {
-      'sentence':sentence,
-      'interpretation':interpretation,
-      'sourceCont':sourceCont,
-      'sourceUrl':sourceUrl,
+  static Future<ApiResult> entence_add(
+      {required String sentence,
+      required String interpretation,
+      required String sourceCont,
+      required String sourceUrl}) {
+    return ApiService.getInstance().post(ApiUrl.entence_add, data: {
+      'sentence': sentence,
+      'interpretation': interpretation,
+      'sourceCont': sourceCont,
+      'sourceUrl': sourceUrl,
     });
   }
 

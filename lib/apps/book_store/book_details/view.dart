@@ -131,7 +131,9 @@ class BookDetailsPage extends StatelessWidget {
                                       mue(
                                           '目录',
                                           '${logic.book.value.catalogueNum}',
-                                          '章节'),
+                                          '章节',onTap: (){
+                                            logic.openBookMuem(snapshot.data?.data??[]);
+                                      }),
                                       const SizedBox(
                                         width: 16,
                                       ),
@@ -209,29 +211,32 @@ class BookDetailsPage extends StatelessWidget {
 
 
 
-  Widget mue(String title, String s1, String s2) {
+  Widget mue(String title, String s1, String s2,{GestureTapCallback? onTap}) {
     return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-        decoration: BoxDecoration(
-            color: Color(0xffF4F5F7), borderRadius: BorderRadius.circular(8)),
-        child: Row(
-          children: [
-            Text(
-              title,
-              style: Get.textTheme.bodySmall,
-            ),
-            const Spacer(),
-            Text(
-              s1,
-              style: Get.textTheme.bodyMedium,
-            ),
-            Text(
-              s2,
-              style: Get.textTheme.bodySmall!
-                  .copyWith(fontSize: 12, fontWeight: FontWeight.bold),
-            ),
-          ],
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+          decoration: BoxDecoration(
+              color: Color(0xffF4F5F7), borderRadius: BorderRadius.circular(8)),
+          child: Row(
+            children: [
+              Text(
+                title,
+                style: Get.textTheme.bodySmall,
+              ),
+              const Spacer(),
+              Text(
+                s1,
+                style: Get.textTheme.bodyMedium,
+              ),
+              Text(
+                s2,
+                style: Get.textTheme.bodySmall!
+                    .copyWith(fontSize: 12, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
         ),
       ),
     );
