@@ -40,7 +40,9 @@ class BookDetailsPage extends StatelessWidget {
             }
           }),
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                logic.share();
+              },
               icon: Image.asset(
                 Imgs.ic_share,
                 width: 24,

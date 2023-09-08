@@ -4,8 +4,13 @@ import 'package:get/get.dart';
 import 'package:huaxia/application/tts/tts_app.dart';
 import 'package:huaxia/apps/book_store/model/BookList.dart';
 import 'package:huaxia/apps/book_store/my_book_logic.dart';
+import 'package:huaxia/apps/login/logic.dart';
+import 'package:huaxia/tools/wx_share.dart';
+import 'package:huaxia/widgets/book_cover.dart';
+import 'package:huaxia/widgets/drop_shadow_image.dart';
 
 import '../../../config/config.dart';
+import '../../login/model/user_model.dart';
 import '../model/Catalogue.dart';
 import 'book_reader/data/book_chapter.dart';
 
@@ -47,17 +52,145 @@ class BookDetailsLogic extends GetxController {
       'index': '0',
     });
   }
+  share(){
+  final boundaryKey = GlobalKey();
+  final user = Get.find<LoginLogic>();
+    Get.bottomSheet(Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        RepaintBoundary(
+          key: boundaryKey,
+          child: Container(
+            margin: const EdgeInsets.all(15),
+            padding: const EdgeInsets.only(left: 34,right: 34,top: 38,bottom: 18),
+            width: double.infinity,
+            decoration: BoxDecoration(
+                image: DecorationImage(image: AssetImage(Imgs.bg_share),fit: BoxFit.fill)
+            ),
+            child: Column(
 
+              children: [
+                StreamBuilder<UserModel>(
+                    stream: user.userStream,
+                    initialData: user.initUserModel,
+                    builder: (context, snapshot) {
+                      return Row(
+                        children: [
+                          ImgNet.net('${snapshot.data?.user?.avatar}',width: 40,height: 40,
+                              boxShape: BoxShape.circle,
+                              border: Border.all(color: Colors.white,width: 1)
+                          ),
+                          Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Text(snapshot.data?.user?.nickName??'',style: Get.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w500) ,),
+                                  if(snapshot.data?.user?.vip==1)
+                                    Image.asset(Imgs.ic_vip,width: 24,height: 24,)
+                                ],
+                              ),
+                              Text('隐藏个人信息',style: Get.textTheme.labelLarge ,),
+
+                            ],
+                          ),
+
+                        ],
+                      );
+                    }
+                ),
+                const SizedBox(height: 50,),
+                SizedBox(
+                  width: 125,
+                  height: 170,
+                  child:BookCover(
+                    title: "${book.value.name}",
+                    width: 120,
+                    height: 164,
+                  )
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  '${book.value.name}',
+                  style: Get.textTheme.displaySmall!
+                      .copyWith(fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(
+                  height: 7,
+                ),
+                Text(
+                  '${book.value.author}',
+                  style: Get.textTheme.bodySmall,
+                ),
+                const SizedBox(height: 100,),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 20,),
+        Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(topRight: Radius.circular(20),topLeft: Radius.circular(20)),
+            color: Colors.white,
+          ),
+          child: Column(
+            children: [
+              const SizedBox(height: 11,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  GestureDetector(
+                    onTap: ()async{
+                      WxShare.shareWxSession(boundaryKey, description: book.value.name??'');
+                    },
+                    child: Column(
+                      children: [
+                        Image.asset(Imgs.ic_share_wx,width: 48,height: 48,),
+                        const SizedBox(height: 6,),
+                        Text('微信',style: Get.textTheme.labelLarge,)
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: (){
+                      WxShare.shareWxTimeline(boundaryKey,description: book.value.name??'');
+                    },
+                    child: Column(
+                      children: [
+                        Image.asset(Imgs.ic_share_wx_2,width: 48,height: 48,),
+                        const SizedBox(height: 6,),
+                        Text('微信朋友圈',style: Get.textTheme.labelLarge,)
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(),
+              TextButton(onPressed: (){
+                Get.back();
+              }, child: Text('关闭'))
+            ],
+          ),
+        )
+      ],
+    ),isScrollControlled: true);
+  }
   void openBookMuem( List<Catalogue> data){
     Get.bottomSheet(
-      ListView.builder(
+      ListView.separated(
       itemCount:data.length,
     itemBuilder: (_,index){
         final d = data[index];
         return ListTile(
           title:Text(d.firstCatalogue??''),
         );
-      })
+      }, separatorBuilder: (BuildContext context, int index) {
+        return Divider();
+      },),
+      backgroundColor: Colors.white,
+
     );
   }
 

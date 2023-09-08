@@ -64,4 +64,11 @@ class ApiUrl{
   static const  entence_add = '/guoxue/app/entence/add';
 
 
+  ///我喜欢的句子
+  static const  loves_entence = '/guoxue/app/entence/like/log/loves';
+
+  ///我的浏览记录
+  static const  read_history = '/guoxue/app/book/shelf/read/history';
+
+
 }

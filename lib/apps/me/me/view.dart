@@ -6,8 +6,8 @@ import 'package:huaxia/apps/login/logic.dart';
 import 'package:huaxia/apps/login/model/user_model.dart';
 import 'package:huaxia/config/config.dart';
 import 'package:huaxia/widgets/persistent_header_builder.dart';
-
 import 'logic.dart';
+
 
 class MePage extends StatelessWidget {
   final logic = Get.find<MeLogic>();
@@ -168,7 +168,7 @@ class MePage extends StatelessWidget {
                       topRight: Radius.circular(20)),
                   boxShadow: [
                     BoxShadow(
-                        offset: Offset(0, -4),
+                        offset: const Offset(0, -4),
                         blurRadius: 15,
                         spreadRadius: 0,
                         color: Colors.black.withOpacity(.1))
@@ -194,7 +194,9 @@ class MePage extends StatelessWidget {
                           Get.toNamed(Routers.sentencePage);
                         }),
                         buildColumn(s1: Imgs.ic_me_notes, s2: '笔记', s3: '132'),
-                        buildColumn(s1: Imgs.ic_me_browse, s2: '浏览', s3: '142'),
+                        buildColumn(s1: Imgs.ic_me_browse, s2: '浏览', s3: '142',onTap: (){
+                          Get.toNamed(Routers.me_read_historyPage);
+                        }),
                       ],
                     ),
                   ),

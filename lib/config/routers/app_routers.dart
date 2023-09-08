@@ -14,6 +14,7 @@ import 'package:huaxia/apps/home_sentence/view.dart';
 
 import 'package:huaxia/apps/login/view.dart';
 import 'package:huaxia/apps/me/me/binding.dart';
+import 'package:huaxia/apps/me/me/me_read_history/view.dart';
 import 'package:huaxia/apps/me/me/sentence/binding.dart';
 import 'package:huaxia/apps/me/me/sentence/view.dart';
 import 'package:huaxia/apps/me/me/view.dart';
@@ -29,6 +30,7 @@ import '../../apps/book_store/book_search/binding.dart';
 import '../../apps/home/binding.dart';
 import '../../apps/home_sentence/add_sentence/binding.dart';
 import '../../apps/home_sentence/add_sentence/view.dart';
+import '../../apps/me/me/me_read_history/binding.dart';
 import '../../apps/me/setting/view.dart';
 
 class Routers{
@@ -49,6 +51,7 @@ class Routers{
   static const me = '/MePage';
   static const sentencePage = '/MePage/SentencePage';
   static const settingPage = '/MePage/SettingPage';
+  static const me_read_historyPage = '/MePage/Me_read_historyPage';
   static const vipPage = '/VipPage';
 }
 class AppRouters{
@@ -62,6 +65,11 @@ class AppRouters{
         name: Routers.login,
         page: () {
           return  LoginPage();
+        }),    GetPage(
+        name: Routers.me_read_historyPage,
+        binding: Me_read_historyBinding(),
+        page: () {
+          return  Me_read_historyPage();
         }),
 
     GetPage(

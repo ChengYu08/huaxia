@@ -86,6 +86,12 @@ class Api {
     });
   }
 
+  static Future<ApiResult<List<Entence>>> loves_entence() {
+    return ApiService.getInstance().get(ApiUrl.loves_entence, dataParser: (v) {
+      return _entences(v);
+    });
+  }
+
   ///[isLike]是否喜欢(0否，1是)
   static Future entence_like(
       {required String entenceId, required String isLike}) {

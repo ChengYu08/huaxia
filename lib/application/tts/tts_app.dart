@@ -72,6 +72,7 @@ class TTSApp extends GetxService {
         );
       },
       opaque: false,
+      maintainState: true
     );
     Overlay.of(context).insert(_entry!);
     showBookSpeak.value = true;
